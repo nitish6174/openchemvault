@@ -21,10 +21,12 @@ Web platform to parse data from chemistry logfiles using cclib
   ```cd cclib```  
   ```python3 setup.py build```  
   ```python3 setup.py install```  
-* Run application using ```python3 app.py```
-* Stop application with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
+* Go back to ```cclib-web``` directory and run flask server using ```python3 app.py```  
+  This will start flask server on the machine at port 5000.
+* Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
 
 ### Usage
 
-* After running the application using the above steps, open [localhost:5000](http://localhost:5000) in your browser to use the running app.
+* When flask server is running, open [localhost:5000](http://localhost:5000) in your browser.
 * Upload a chemistry logfile to get parsed data from it.
+* Use the sample files in ```cclib/data``` folder and make sure that you provide the correct log file type in the form on website.
