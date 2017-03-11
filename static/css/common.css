@@ -1,0 +1,8 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.test {
+    background-color: lavender;
+    outline: 1px solid black;
+}

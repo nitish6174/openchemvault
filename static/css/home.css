@@ -1,0 +1,14 @@
+body {
+    background-color: #f6f6f6;
+    color: #333;
+}
+
+nav.navbar.navbar-default {
+    background-color: #fff;
+}
+
+#resultBox {
+    background-color: #fcfcfc;
+    min-height: 200px;
+    box-shadow: 0px 0px 2px 0px #666;
+}

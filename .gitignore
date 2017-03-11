@@ -1,5 +1,6 @@
 venv/
 cclib/
+uploads/
 *.pyc
 __pycache__/
 */__pycache__/

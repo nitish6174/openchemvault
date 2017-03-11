@@ -15,8 +15,61 @@
 
 {% block body %}
 
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div>
+            <ul class="nav navbar-nav navbar-left">
+                <li><a class="navbar-brand text-center" href="#"><strong>cclib web repo</strong></a></li>
+            </ul>
+        </div>
+        <div class="collapse navbar-collapse">
+        </div>
+    </div>
+</nav>
+
 <div class="container-fluid">
-    <h2>Web platform to parse data from chemistry logfiles using cclib</h2>
+
+    <h2 class="text-center">Web platform to parse data from chemistry logfiles using cclib</h2>
+
+    <div class="row">
+        <div class="col-md-5">
+            <h3 class="text-center">Upload log file to parse</h3>
+            <form class="form-horizontal" id="logFileForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="logFileType" class="col-sm-3 control-label">Log file type</label>
+                    <div class="col-sm-9">
+                        <select class="form-control" id="logFileType">
+                            <option>ADF</option>
+                            <option>DALTON</option>
+                            <option>Gaussian</option>
+                            <option>Jaguar</option>
+                            <option>Molpro</option>
+                            <option>NWChem</option>
+                            <option>ORCA</option>
+                            <option>Psi</option>
+                            <option>Q-Chem</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="logFileInput" class="col-sm-3 control-label">Log file</label>
+                    <div class="col-sm-9">
+                        <input type="file" name="file" id="logFileInput">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <input type="submit" class="btn btn-success btn-block" id="logFileSubmit">
+                    </div>
+                </div>
+            </form>            
+        </div>
+        <div class="col-md-7">
+            <h3 class="text-center">Result</h3>
+            <div id="resultBox"></div>
+        </div>
+    </div>
+
 </div>
 
 {% endblock %}

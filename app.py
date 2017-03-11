@@ -8,6 +8,7 @@ from routes import routes_module
 app = Flask(__name__)
 Compress(app)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 3600
+app.config['UPLOAD_FOLDER'] = "uploads/"
 
 assets = Environment(app)
 assets.register(getAssets())
