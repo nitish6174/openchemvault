@@ -17,7 +17,7 @@ Web platform to parse data from chemistry logfiles using cclib
   ```git clone https://github.com/cclib/cclib.git```
 * Install pip dependencies and build cclib inside virtual environment  
   ```source venv/bin/activate```  
-  ```pip3 install numpy flask flask_compress flask_assets```  
+  ```pip3 install numpy flask flask_compress flask_assets cssmin jsmin```  
   ```cd cclib```  
   ```python3 setup.py build```  
   ```python3 setup.py install```  

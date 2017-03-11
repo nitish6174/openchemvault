@@ -1,2 +1,7 @@
 venv/
-
+cclib/
+*.pyc
+__pycache__/
+*/__pycache__/
+static/public/
+static/.webassets-cache/

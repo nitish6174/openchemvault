@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+
+
+{% block head %}
+	<title>Template website</title>
+	{% assets "home_css" %}
+	<link rel="stylesheet" href="{{ ASSET_URL }}" />
+	{% endassets %}
+	<meta name="description" content="">
+	<meta name="keywords" content="">
+{% endblock %}
+
+
+
+{% block body %}
+
+{% endblock %}
+
+
+
+{% block scripts %}
+{% assets "home_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock %}
