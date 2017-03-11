@@ -1,6 +1,7 @@
 body {
     background-color: #f6f6f6;
     color: #333;
+    padding-bottom: 100px;
 }
 
 nav.navbar.navbar-default {
@@ -10,5 +11,17 @@ nav.navbar.navbar-default {
 #resultBox {
     background-color: #fcfcfc;
     min-height: 200px;
+    max-height: 500px;
     box-shadow: 0px 0px 2px 0px #666;
+    padding: 10px;
+    overflow: auto;
+}
+
+#resultBox.success {
+    animation-name: successFlash;
+    animation-duration: 1s;
+}
+@keyframes successFlash {
+    from { background-color: #2ECC71; }
+    to { background-color: #fcfcfc; }
 }

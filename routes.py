@@ -21,7 +21,7 @@ def uploadLogfile():
         f.save(new_log_file_name)
         d = processFile(new_log_file_name,logtype)
         os.remove(new_log_file_name)
-        return json.dumps(d)
+        return json.dumps(d, sort_keys=True)
 
 
 def newLogFileName():
