@@ -2,6 +2,11 @@ body {
     font-family: 'Open Sans', sans-serif;
 }
 
+.hr-no-gap {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .test {
     background-color: lavender;
     outline: 1px solid black;

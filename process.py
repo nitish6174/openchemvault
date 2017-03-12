@@ -1,5 +1,5 @@
 from cclib.parser import *
-import numpy as np
+from cclib.parser.utils import PeriodicTable
 
 def processFile(file_path,mode):
     if mode=="ADF":
@@ -31,6 +31,8 @@ def processFile(file_path,mode):
         res = parseData(p)
     else:
         res = {"success":False}
+    if res["success"]:
+        chemicalFormula(res["data"])
     return res
 
 def parseData(p):
@@ -401,6 +403,21 @@ def parseData(p):
             "success" : False
         }
     return res
+
+def chemicalFormula(d):
+    if d["atomnos"]!="N/A":
+        periodic_obj = PeriodicTable()
+        atom_dict = {}
+        for x in d["atomnos"]:
+            if x in atom_dict:
+                atom_dict[x] += 1
+            else:
+                atom_dict[x] = 1
+        formula_dict = {}
+        for x in atom_dict:
+            elem = periodic_obj.element[x]
+            formula_dict[elem] = atom_dict[x]
+        d["formula"] = formula_dict
 
 def convertToList(a):
     try:

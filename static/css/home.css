@@ -1,5 +1,5 @@
 body {
-    background-color: #f6f6f6;
+    background-color: #f9f9f9;
     color: #333;
     padding-bottom: 100px;
 }
@@ -8,20 +8,61 @@ nav.navbar.navbar-default {
     background-color: #fff;
 }
 
-#resultBox {
+/* #resultBox {
     background-color: #fcfcfc;
-    min-height: 200px;
+    min-height: 50px;
     max-height: 500px;
-    box-shadow: 0px 0px 2px 0px #666;
+    box-shadow: 0px 0px 10px 0px #999;
     padding: 10px;
     overflow: auto;
-}
+} */
 
-#resultBox.success {
+.accordion-item {
+    background-color: hsla(0, 0%, 100%, 0.5);
+    margin-top: 5px;
+    box-shadow: 0px 0px 3px 0px #ccc;
+}
+.accordion-title {
+    padding: 10px;
+    padding-left: 15px;
+    cursor: pointer;
+}
+.accordion-title h4 {
+    margin: 0;
+    padding: 0;
+}
+.accordion-text {
+    padding: 10px;
+    overflow: auto;
+    display: none;
+}
+.accordion-item:hover {
+    box-shadow: 0px 0px 10px 0px #999;
+}
+/* .accordion-item:hover .accordion-text {
+    display: block;
+} */
+
+
+#progressBarWrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: transparent;
+    z-index: 1000;
+}
+#progressBar {
+    width: 0%;
+    height: 3px;
+    background-color: #5cb85c;
+}
+#progressBar.success {
     animation-name: successFlash;
     animation-duration: 1s;
 }
 @keyframes successFlash {
-    from { background-color: #2ECC71; }
-    to { background-color: #fcfcfc; }
+    0% { width: 0%; }
+    99% { width: 100%; }
+    100% { width: 0%; }
 }

@@ -4,6 +4,7 @@ def getAssets():
     bundles = { 
         'common_css': Bundle(
             'css/ext/bootstrap.min.css',
+            'css/thin_scroll.css',
             'css/common.css',
             output='public/common.css',
             filters='cssmin'),
