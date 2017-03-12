@@ -13,8 +13,6 @@ Web platform to parse data from chemistry logfiles using cclib
   ```git clone https://github.com/nitish6174/cclib-web.git```  
   ```cd cclib-web```  
   ```virtualenv -p python3 venv```  
-* Also make a folder where the logfiles uploaded by user will go (this folder is ignored by git)  
-  ```mkdir uploads```
 * Download [cclib](https://github.com/cclib/cclib) inside the ```cclib-web``` folder:  
   ```git clone https://github.com/cclib/cclib.git```
 * Install pip dependencies and build cclib inside virtual environment  

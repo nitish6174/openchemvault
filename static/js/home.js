@@ -9,9 +9,9 @@ $(document).ready(function(){
         var result_box = document.getElementById("resultBox");
         var progress_bar = document.getElementById("progressBar");
         result_msg.innerHTML = "Loading . . .";
+        result_box.innerHTML = "";
 
         var data = new FormData();
-        data.append('logtype', document.getElementById("logFileType").value);
         file = document.getElementById('logFileInput').files[0];
         data.append('file', file);
 
@@ -23,7 +23,11 @@ $(document).ready(function(){
                 d = JSON.parse(xhr.responseText);
                 if(d["success"]==false)
                 {
-                    result_msg.innerHTML = "Oops! Parsing error or unsupported format";
+                    var msg = "Oops! Seems like this file format is unsupported<br><br>";
+                    msg += "<span class='text-muted'>";
+                    msg += "Make sure you are using one of the formats listed <a href='http://cclib.github.io'>here</a>";
+                    msg += "</span>";
+                    result_msg.innerHTML = msg;
                 }
                 else
                 {

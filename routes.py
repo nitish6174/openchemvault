@@ -15,11 +15,12 @@ def homePage():
 @routes_module.route('/upload', methods=["POST"])
 def uploadLogfile():
     if request.method == 'POST':
-        logtype = request.form['logtype']
         f = request.files['file']
+        if not os.path.exists(dir_path):
+            os.mkdir(dir_path)
         new_log_file_name = newLogFileName()
         f.save(new_log_file_name)
-        d = processFile(new_log_file_name,logtype)
+        d = processFile(new_log_file_name)
         os.remove(new_log_file_name)
         return json.dumps(d, sort_keys=True)
 
