@@ -1,7 +1,6 @@
 from cclib.parser import *
 from cclib.parser.utils import PeriodicTable
-from cclib.io.ccio import *
-
+from cclib.io.ccio import ccopen, ccread
 
 def processFile(file_path):
     logfile_type = ccopen(file_path)
