@@ -2,7 +2,7 @@
 
 Web platform to parse data from chemistry logfiles using cclib
 
-### Setup and running app
+### Setup
 
 **Note** : Python 3 is recommended. Just change the version numbers in steps below for Python 2.
 
@@ -13,6 +13,8 @@ Web platform to parse data from chemistry logfiles using cclib
   ```git clone https://github.com/nitish6174/cclib-web.git```  
   ```cd cclib-web```  
   ```virtualenv -p python3 venv```  
+* Also make a folder where the logfiles uploaded by user will go (this folder is ignored by git)  
+  ```mkdir uploads```
 * Download [cclib](https://github.com/cclib/cclib) inside the ```cclib-web``` folder:  
   ```git clone https://github.com/cclib/cclib.git```
 * Install pip dependencies and build cclib inside virtual environment  
@@ -21,12 +23,14 @@ Web platform to parse data from chemistry logfiles using cclib
   ```cd cclib```  
   ```python3 setup.py build```  
   ```python3 setup.py install```  
-* Go back to ```cclib-web``` directory and run flask server using ```python3 app.py```  
+
+### Running server and usage
+
+* Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
+  (Run ```source venv/bin/activate``` to enter virtual environment)
+* Run ```python3 app.py```  
   This will start flask server on the machine at port 5000.
-* Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
-
-### Usage
-
 * When flask server is running, open [localhost:5000](http://localhost:5000) in your browser.
 * Upload a chemistry logfile to get parsed data from it.
 * Use the sample files in ```cclib/data``` folder and make sure that you provide the correct log file type in the form on website.
+* Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
