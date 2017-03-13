@@ -33,9 +33,21 @@ $(document).ready(function(){
                     else
                     {
                         var result_box_text = "";
-                        for(var key in d["data"])
+                        if(d["xyz_data"]!="")
                         {
-                            var result_line_val = d["data"][key];
+                            // console.log(d["xyz_data"]);
+                            result_box_text += "<div class='accordion-item'>";
+                            result_box_text += "<div class='accordion-title' onclick='$(this).next().next().toggle();'>";
+                            result_box_text += "<h4><i class='text-muted glyphicon glyphicon-menu-down'></i> 3D model</h4></div>";
+                            result_box_text += "<hr class='hr-no-gap'>";
+                            result_box_text += "<div class='accordion-text active'>";
+                            result_box_text += "<div class='mol-container' id='molBox'></div>";
+                            result_box_text += "</div>";
+                            result_box_text += "</div>";
+                        }
+                        for(var key in d["attributes"])
+                        {
+                            var result_line_val = d["attributes"][key];
                             var valstring = "";
                             if(key=="formula")
                             {
@@ -50,7 +62,7 @@ $(document).ready(function(){
                             }
                             else
                             {
-                                valstring = JSON.stringify(d["data"][key]);
+                                valstring = JSON.stringify(d["attributes"][key]);
                             }
                             result_box_text += "<div class='accordion-item'>";
                             result_box_text += "<div class='accordion-title' onclick='$(this).next().next().toggle();'>";
@@ -61,6 +73,10 @@ $(document).ready(function(){
                         }
                         result_msg.innerHTML = "Result";
                         result_box.innerHTML = result_box_text;
+                        if(d["xyz_data"]!="")
+                        {
+                            load3Dmodel($("#molBox"),d["xyz_data"]);
+                        }
                     }
                     progress_bar.classList.remove("success");
                     void progress_bar.offsetWidth;
@@ -73,5 +89,20 @@ $(document).ready(function(){
             }
         };
     });
+
+    function load3Dmodel(container,data)
+    {
+        let config = { backgroundColor: '#444' };
+        let viewer = $3Dmol.createViewer(container,config);
+        viewer.addModel(data,'xyz');
+        viewer.setStyle({},{
+            // cartoon : {},
+            sphere  : {scale:0.3},
+            stick   : {}
+        });
+        viewer.zoomTo();
+        viewer.render();
+        viewer.zoom(1.0, 1000);
+    }
 
 });

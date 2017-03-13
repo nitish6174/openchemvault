@@ -18,7 +18,11 @@ function loadFile(viewer,data_file,file_type)
         success: function(data) {
             let v = viewer;
             v.addModel(data,file_type);
-            // v.setStyle({sphere:{scale:0.1}});
+            viewer.setStyle({},{
+                // cartoon : {},
+                sphere  : {scale:0.3},
+                stick   : {}
+            });
             v.zoomTo();
             v.render();
             v.zoom(1.0, 1000);
