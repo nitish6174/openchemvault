@@ -3,10 +3,10 @@ $(function() {
     let config = { backgroundColor: '#fcfcfc' };
     let viewer = $3Dmol.createViewer(element,config);
 
-    let data_file = 'http://files.rcsb.org/view/1mbs.pdb';
+    // let data_file = 'http://files.rcsb.org/view/1mbs.pdb';
     // let data_file = 'http://3dmol.csb.pitt.edu/tests/test_structs/big.xyz';
     // let data_file = 'http://localhost:5000/data/BaHfO3.xyz';
-    // let data_file = 'http://localhost:5000/data/benzene.xyz';
+    let data_file = 'http://localhost:5000/data/benzene.xyz';
     
     let file_type = data_file.substr(data_file.length-3);
     loadFile(viewer,data_file,file_type);

@@ -1,13 +1,13 @@
 # cclib repository
 cclib/
 # Uploaded files
-uploads/
+flaskapp/uploads/
 # Cached files
 *.pyc
 __pycache__/
 */__pycache__/
-static/public/
-static/.webassets-cache/
+flaskapp/static/public/
+flaskapp/static/.webassets-cache/
 # Virtual environment directory
 venv/
 venv_py2/

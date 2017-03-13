@@ -1,6 +1,6 @@
 # cclib web repository
 
-Web platform to parse data from chemistry logfiles using cclib
+Web platform to parse data from chemistry logfiles using [cclib](https://github.com/cclib/cclib)
 
 ### Setup
 
@@ -12,11 +12,11 @@ Web platform to parse data from chemistry logfiles using cclib
 * Clone repository and setup virtualenv for project  
   ```git clone https://github.com/nitish6174/cclib-web.git```  
   ```cd cclib-web```  
-  ```virtualenv -p python3 venv```  
+  ```virtualenv -p python3 venv_py3```  
 * Download [cclib](https://github.com/cclib/cclib) inside the ```cclib-web``` folder:  
   ```git clone https://github.com/cclib/cclib.git```
 * Install pip dependencies and build cclib inside virtual environment  
-  ```source venv/bin/activate```  
+  ```source venv_py3/bin/activate```  
   ```pip3 install -r requirements.txt```  
   (alternately: ```pip3 install numpy flask flask_compress flask_assets cssmin jsmin```)  
   ```cd cclib```  
@@ -26,10 +26,10 @@ Web platform to parse data from chemistry logfiles using cclib
 ### Running server and usage
 
 * Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
-  (Run ```source venv/bin/activate``` to enter virtual environment)
-* Run ```python3 app.py```  
+  (Run ```source venv_py3/bin/activate``` to enter virtual environment)
+* Goto ```flaskapp``` directory and run ```python3 app.py```  
   This will start flask server on the machine at port 5000.
 * When flask server is running, open [localhost:5000](http://localhost:5000) in your browser.
 * Upload a chemistry logfile to get parsed data from it.
-* Use the sample files in ```cclib/data``` folder and make sure that you provide the correct log file type in the form on website.
+* Use any out sample files from ```cclib/data``` folder.
 * Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
