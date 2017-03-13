@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+
+
+{% block head %}
+    <title>cclib web repository</title>
+    {% assets "3Dviewer_css" %}
+    <link rel="stylesheet" href="{{ ASSET_URL }}" />
+    {% endassets %}
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+{% endblock %}
+
+
+
+{% block body %}
+
+<div class="container">
+
+    <div class="mol-container" id="molBox"></div>
+
+</div>
+
+{% endblock %}
+
+
+
+{% block scripts %}
+<script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+{% assets "3Dviewer_js" %}
+<script type="text/javascript" src="{{ ASSET_URL }}"></script>
+{% endassets %}
+{% endblock %}

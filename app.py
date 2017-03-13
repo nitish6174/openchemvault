@@ -15,5 +15,9 @@ assets.register(getAssets())
 
 app.register_blueprint(routes_module)
 
+@app.route('/data/<path:filename>')
+def loadXYZ(filename):
+    return send_from_directory(app.static_folder+"/data_files", filename)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

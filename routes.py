@@ -25,6 +25,12 @@ def uploadLogfile():
         return json.dumps(d, sort_keys=True)
 
 
+@routes_module.route('/3Dviewer', methods=["GET"])
+def viewerPage():
+    if request.method == 'GET':
+        return render_template('3Dviewer.html')
+
+
 def newLogFileName():
     log_file_name = randomString()
     while os.path.isfile(dir_path+log_file_name+".log"):

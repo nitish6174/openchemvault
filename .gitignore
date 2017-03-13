@@ -1,8 +1,14 @@
-venv/
+# cclib repository
 cclib/
+# Uploaded files
 uploads/
+# Cached files
 *.pyc
 __pycache__/
 */__pycache__/
 static/public/
 static/.webassets-cache/
+# Virtual environment directory
+venv/
+venv_py2/
+venv_py3/

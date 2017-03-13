@@ -21,6 +21,15 @@ def getAssets():
         'home_js': Bundle(
             'js/home.js',
             output='public/home.js',
+            filters='jsmin'),
+
+        '3Dviewer_css': Bundle(
+            'css/3Dviewer.css',
+            output='public/3Dviewer.css',
+            filters='cssmin'),
+        '3Dviewer_js': Bundle(
+            'js/3Dviewer.js',
+            output='public/3Dviewer.js',
             filters='jsmin')
     }
     return bundles
