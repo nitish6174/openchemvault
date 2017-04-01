@@ -5,18 +5,21 @@ from cclib.io.ccio import ccopen, ccread
 def processFile(file_path):
     logfile_type = ccopen(file_path)
     if logfile_type!=None:
-        parsed_data = ccread(file_path)
-        parsed_data.listify()
-        res = {
-            "success":True,
-            "attributes":{}
-        }
-        for x in parsed_data._attributes:
-            try:
-                val = getattr(parsed_data,x)
-                res["attributes"][x] = val
-            except:
-                pass
+        try:
+            parsed_data = ccread(file_path)
+            parsed_data.listify()
+            res = {
+                "success":True,
+                "attributes":{}
+            }
+            for x in parsed_data._attributes:
+                try:
+                    val = getattr(parsed_data,x)
+                    res["attributes"][x] = val
+                except:
+                    pass
+        except:
+            res = {"success":False}
     else:
         res = {"success":False}
     if res["success"]:
@@ -34,11 +37,18 @@ def chemicalFormula(d):
                 atom_dict[x] += 1
             else:
                 atom_dict[x] = 1
-        formula_dict = {}
+        atom_arr = []
         for x in atom_dict:
-            elem = periodic_obj.element[x]
-            formula_dict[elem] = atom_dict[x]
+            atom_arr.append({"atomno":x,"count":atom_dict[x]})
+        atom_arr.sort(key=lambda x: x["atomno"])
+        formula_dict = {}
+        formula_str = ""
+        for x in atom_arr:
+            elem = periodic_obj.element[x["atomno"]]
+            formula_dict[elem] = x["count"]
+            formula_str = formula_str + elem + " " + str(x["count"]) + " "
         d["formula"] = formula_dict
+        d["formula_string"] = formula_str[:-1]
     except:
         pass
 
