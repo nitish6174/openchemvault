@@ -2,39 +2,61 @@
 
 Web platform to parse data from chemistry logfiles using [cclib](https://github.com/cclib/cclib)
 
-### Setup
+
+## Setup
+
+### With Docker
+
+* Install Docker on your machine  
+* Clone this repository
+* Download [cclib](https://github.com/cclib/cclib) repository inside the above downloaded ```cclib-web``` folder :  
+  ```git clone https://github.com/cclib/cclib.git```
+* Build the Dockerfile  
+  ```sudo docker build -t cclib-web:latest .```
+* Run the built docker image  
+  ```docker run -d -p 5000:5000 cclib-web```
+* The application can now be accessed in browser at ```localhost:5000```
+* To stop the docker container running this application, first find the container id by ```sudo docker ps -a``` and then use ```sudo docker stop <CONTAINER ID>``` to stop it.
+
+### Using python virtual environment
 
 **Note** : Python 3 is recommended. Just change the version numbers in steps below for Python 2.
 
 * Install python pip and virtualenv  
-  ```sudo apt-get install python3-pip```  
+  ```sudo apt-get install python3 python3-pip```  
   ```pip3 install virtualenv```  
+* Install MongoDB  
+  ```sudo apt-get install mongo```  
 * Clone repository and setup virtualenv for project  
   ```git clone https://github.com/nitish6174/cclib-web.git```  
   ```cd cclib-web```  
   ```virtualenv -p python3 venv_py3```  
-* Download [cclib](https://github.com/cclib/cclib) inside the ```cclib-web``` folder:  
+* Download [cclib](https://github.com/cclib/cclib) repository inside the ```cclib-web``` folder:  
   ```git clone https://github.com/cclib/cclib.git```
 * Install pip dependencies and build cclib inside virtual environment  
   ```source venv_py3/bin/activate```  
   ```pip3 install -r requirements.txt```  
-  (alternately: ```pip3 install numpy flask flask_compress flask_assets cssmin jsmin pymongo```)  
   ```cd cclib```  
   ```python3 setup.py build```  
   ```python3 setup.py install```  
+* Running :  
+  - Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
+    (Run ```source venv_py3/bin/activate``` to enter virtual environment)
+  * Goto ```flaskapp``` directory and run ```python3 app.py```  
+    This will start flask server on the machine at port 5000.
+  * The application can now be accessed in browser at ```localhost:5000```
+  * Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
 
-### Running server and usage
 
-* Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
-  (Run ```source venv_py3/bin/activate``` to enter virtual environment)
-* Goto ```flaskapp``` directory and run ```python3 app.py```  
-  This will start flask server on the machine at port 5000.
-* When flask server is running, open [localhost:5000](http://localhost:5000) in your browser.
-* Upload a chemistry logfile to get parsed data from it.
-* Use any out sample files from ```cclib/data``` folder.
-* Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
+## Available functionality
 
-### Project plan
+* Any computational chemistry log file (of format supported by cclib) can be uploaded on the webpage to view the parsed data from it.
+* Also, if atom coordinates information is available, a 3D rendering of the molecule is also shown.
+
+
+## Project plan
+
+This project currently has 3 stages :
 * Make a script which processes computational chemistry output files in specified folder and builds a MongoDB database (planned schema given below).
 * Develop API for searching molecules by various parameters and query calculation method results on them.
 * Develop web-interface to search molecules using above API, get parsed data from an uploaded file and add new files to data repository.
@@ -52,12 +74,8 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
         "InChIKey" : "XLYOFNOQVPJJNP-UHFFFAOYSA-N",
         "IUPAC names" : ["water","oxidane"],
         "other names" : [],
-        "aonames" : ["O1_1S","O1_2S","O1_2PX","O1_2PY","O1_2PZ","H2_1S","H3_1S"],
-        "atommasses" : [15.9949146,1.007825,1.007825],
-        "atomcoords" : [[[0,0,0.119159],[0,0.790649,-0.476637],[0,-0.790649,-0.476637]]],
-        "charge" : 0,
         ...
-        ... (molecule specific attributes)
+        ... (other molecule specific attributes)
         ...
         "calculation_files" : [
           {
@@ -72,7 +90,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
             "scfenergies" : [-2039.8832157548657],
             "scfvalues" : [[[0.0414,0.146,1],[0.00323,0.00948,-0.0538],[0.000787,0.00331,-0.00051],[0.000173,0.0007,-0.0000134],[0.0000511,0.000159,-4.86e-7],[3.82e-7,0.00000136,-3.06e-8],[2.79e-10,8.85e-10,-1.88e-12]]]
             ...
-            ... (calculation file specific attributes)
+            ... (other calculation file specific attributes)
             ...
           }
         ]
@@ -89,7 +107,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
         "IUPAC names" : ["methoxymethane"],
         "other names" : ["dimethyl ether","dimethyl oxide","DME"],
         ...
-        ... (molecule specific attributes)
+        ... (other molecule specific attributes)
         ...
         "calculation_files" : [
           {
@@ -98,7 +116,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
             "scfenergies" : ... ,
             "scfvalues" : ... ,
             ...
-            ... (calculation file specific attributes)
+            ... (other calculation file specific attributes)
             ...
           }
         ]
@@ -109,7 +127,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
         "IUPAC names" : ["ethanol","1-hydroxyethane"],
         "other names" : ["ethyl alcohol","hydroxyethane","EtOH"],
         ...
-        ... (molecule specific attributes)
+        ... (other molecule specific attributes)
         ...
         "calculation_files" : [
           {
@@ -118,7 +136,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
             "scfenergies" : ... ,
             "scfvalues" : ... ,
             ...
-            ... (calculation file specific attributes)
+            ... (other calculation file specific attributes)
             ...
           }
         ]
