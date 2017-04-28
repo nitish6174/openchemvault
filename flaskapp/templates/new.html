@@ -2,25 +2,31 @@
 
 
 
+{# Page variables #}
+{% set head_title       = "Openchemistry-web" %}
+{% set assets_css       = "page_css" %}
+{% set assets_js        = "page_js" %}
+{% set nav_bar          = True %}
+{% set nav_title        = "Openchemistry-web" %}
+{% set search_bar       = True %}
+
+
+
+{# Head block #}
 {% block head %}
-	<title>Template website</title>
-	{% assets "home_css" %}
-	<link rel="stylesheet" href="{{ ASSET_URL }}" />
-	{% endassets %}
-	<meta name="description" content="">
-	<meta name="keywords" content="">
+
 {% endblock %}
 
 
 
+{# Body content #}
 {% block body %}
 
 {% endblock %}
 
 
 
+{# Scripts block #}
 {% block scripts %}
-{% assets "home_js" %}
-<script type="text/javascript" src="{{ ASSET_URL }}"></script>
-{% endassets %}
+
 {% endblock %}

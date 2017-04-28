@@ -19,6 +19,8 @@ db_collection_name = config.mongo_collection
 success_count = 0
 # Modify database (1) or just loop through files and parse them (0)
 insert_mode = 1
+# Unbuffered output
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 
 def main():
@@ -31,8 +33,8 @@ def main():
         "in a read-accessible folder\n"
     )
     print(message)
-    choice1 = input("Continue (Y/n) : ")
-    if choice1 == "" or choice1 == "y" or choice1 == "Y":
+    choice1 = input("Proceed to setup database (N/y) : ")
+    if choice1 == "y" or choice1 == "Y":
 
         message = "\nEnter mongodb host (default: " + \
                   default_db_host + ") : "
@@ -131,10 +133,8 @@ def insert_data(data, db_cursor):
     except Exception as e:
         print("Error in inserting document")
         print("-" * 50)
-        sys.stdout.flush()
         print(e)
         print("-" * 50)
-        sys.stdout.flush()
         pass
 
 

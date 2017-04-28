@@ -14,7 +14,8 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
 * Build the Dockerfile  
   ```sudo docker build -t cclib-web:latest .```
 * Run the built docker image  
-  ```docker run -d -p 5000:5000 cclib-web```
+  ```sudo docker run -i -p 5000:5000 cclib-web```  
+  Enter ```y``` when the image runs to seed database
 * The application can now be accessed in browser at ```localhost:5000```
 * To stop the docker container running this application, first find the container id by ```sudo docker ps -a``` and then use ```sudo docker stop <CONTAINER ID>``` to stop it.
 

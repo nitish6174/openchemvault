@@ -17,6 +17,8 @@ db_collection_name = config.mongo_collection
 success_count = 0
 # Modify database (1) or just loop through files and parse them (0)
 insert_mode = 1
+# Unbuffered output
+sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 
 def main():
@@ -29,7 +31,7 @@ def main():
         "in a read-accessible folder\n"
     )
     print(message)
-    choice = input("Continue (N/y) : ")
+    choice = input("Proceed to setup database (N/y) : ")
     if choice == "y" or choice == "Y":
         try:
             db_conn = pymongo.MongoClient(default_db_host, int(default_db_port))
@@ -97,10 +99,8 @@ def insert_data(data, db_cursor):
     except Exception as e:
         print("Error in inserting document")
         print("-" * 50)
-        sys.stdout.flush()
         print(e)
         print("-" * 50)
-        sys.stdout.flush()
         pass
 
 

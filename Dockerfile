@@ -6,16 +6,18 @@ RUN apt-get install -y \
     python3-pip \
     python3-dev \
     build-essential \
-    mongodb
+    mongodb \
+    git
+RUN service mongodb start
 COPY . /app
 WORKDIR /app
+RUN git clone https://github.com/cclib/cclib
 RUN pip3 install --upgrade pip
-RUN pip3 install numpy
+RUN pip3 install -r requirements.txt
 WORKDIR /app/cclib
 RUN python3 setup.py build
 RUN python3 setup.py install
-WORKDIR /app
-RUN pip3 install -r requirements.txt
 WORKDIR /app/flaskapp
+RUN cp config.py.example config.py
 ENTRYPOINT ["python3"]
 CMD ["app.py"]

@@ -1,11 +1,19 @@
+/* Body styling */
+
 body {
     font-family: 'Open Sans', sans-serif;
 }
+
+
+/* Common classes */
 
 .hr-no-gap {
     margin-top: 0;
     margin-bottom: 0;
 }
+
+
+/* Debug purpose */
 
 .test {
     background-color: lavender;

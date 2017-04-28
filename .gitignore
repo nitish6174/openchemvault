@@ -1,5 +1,6 @@
-# cclib repository
+# cclib repository and data folder
 cclib/
+data/
 
 # Uploaded files
 flaskapp/uploads/
@@ -13,4 +14,8 @@ flaskapp/static/.webassets-cache/
 
 # Virtual environment directory
 venv/
+venv_py2/
 venv_py3/
+
+# Configuration file
+flaskapp/config.py

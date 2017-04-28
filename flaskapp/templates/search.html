@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+
+
+{# Page variables #}
+{% set head_title = "Openchemistry-web" %}
+{% set assets_css = "search_css" %}
+{% set assets_js  = "search_js" %}
+{% set nav_bar    = True %}
+{% set nav_title  = "Openchemistry-web" %}
+{% set search_bar = True %}
+
+
+
+{# Head block #}
+{% block head %}
+
+{% endblock %}
+
+
+
+{# Body content #}
+{% block body %}
+
+<div class="container-fluid">
+
+    <h2 class="text-center">Search for a molecule</h2>
+    <hr>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <form class="form-horizontal" id="searchForm">
+                <div class="form-group">
+                    <label for="query-type" class="col-sm-3 control-label">Search By</label>
+                    <div class="col-sm-9">
+                        <div class="radio">
+                          <label><input type="radio" name="query-type" value="formula" checked="true">Molecular formula</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="logFileInput" class="col-sm-3 control-label">Query</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" name="query-text">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <input type="submit" class="btn btn-success btn-block" id="querySubmit">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-10 col-md-offset-1">
+            <h3 id="resultMsg" class="text-center"></h3>
+            <div id="resultBox"></div>
+        </div>
+    </div>
+
+</div>
+
+<div id="progressBarWrapper">
+    <div id="progressBar"></div>
+</div>
+
+{% endblock %}
+
+
+
+{# Scripts block #}
+{% block scripts %}
+
+{% endblock %}
