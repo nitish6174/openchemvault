@@ -29,6 +29,12 @@ $(document).ready(function(){
                             msg += "<span class='text-muted'>";
                             msg += "Make sure you are using one of the formats listed <a href='http://cclib.github.io'>here</a>";
                             msg += "</span>";
+                            if(d.message!=undefined)
+                            {
+                                msg += "<br/><span class='text-muted'>Error : ";
+                                msg += d.message;
+                                msg += "</span>";
+                            }
                             result_msg.innerHTML = msg;
                         }
                         else

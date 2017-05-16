@@ -25,7 +25,7 @@ def clear_trailing():
 # Home page
 @routes_module.route("/", methods=["GET"])
 def homePage():
-    return redirect("/search")
+    return redirect("/upload")
 
 
 # Search for molecules in database

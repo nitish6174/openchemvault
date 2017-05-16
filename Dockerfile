@@ -1,5 +1,6 @@
 FROM ubuntu:16.04
 MAINTAINER Nitish Garg "nitish.garg.6174@gmail.com"
+# Install apt dependencies
 RUN apt-get update -y
 RUN apt-get install -y \
     python3 \
@@ -7,17 +8,21 @@ RUN apt-get install -y \
     python3-dev \
     build-essential \
     mongodb \
-    git
+    aptitude
+# Start MongoDB server
 RUN service mongodb start
+# Copy source code
 COPY . /app
+# cd to source directory
 WORKDIR /app
-RUN git clone https://github.com/cclib/cclib
+# Install pip dependencies
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
-WORKDIR /app/cclib
-RUN python3 setup.py build
-RUN python3 setup.py install
+# Install cclib
+RUN aptitude install -y cclib
+# Goto flaskapp directory to copy config file
 WORKDIR /app/flaskapp
 RUN cp config.py.example config.py
+# Start flask application
 ENTRYPOINT ["python3"]
 CMD ["app.py"]

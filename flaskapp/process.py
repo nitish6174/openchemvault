@@ -1,6 +1,14 @@
 from cclib.parser import *
 from cclib.parser.utils import PeriodicTable
-from cclib.io.ccio import ccopen, ccread
+try:
+    from cclib.io import ccopen
+except:
+    from cclib.parser import ccopen
+try:
+    from cclib.io import ccread
+except:
+    from cclib.parser import ccread
+
 
 def processFile(file_path):
     logfile_type = ccopen(file_path)
@@ -9,8 +17,8 @@ def processFile(file_path):
             parsed_data = ccread(file_path)
             parsed_data.listify()
             res = {
-                "success":True,
-                "attributes":{}
+                "success": True,
+                "attributes": {}
             }
             for x in parsed_data._attributes:
                 try:
@@ -19,9 +27,9 @@ def processFile(file_path):
                 except:
                     pass
         except:
-            res = {"success":False}
+            res = {"success": False}
     else:
-        res = {"success":False}
+        res = {"success": False}
     if res["success"]:
         chemicalFormula(res["attributes"])
         res["xyz_data"] = XYZdata(res["attributes"])
@@ -52,6 +60,7 @@ def chemicalFormula(d):
     except:
         pass
 
+
 def XYZdata(d):
     periodic_obj = PeriodicTable()
     xyz_data = ""
@@ -64,25 +73,3 @@ def XYZdata(d):
     except:
         xyz_data = ""
     return xyz_data
-
-# This function is redundant as it is already been implemented in cclib
-# 
-# def convertToList(a):
-#     try:
-#         a = a.tolist()
-#     except:
-#         pass
-#     if isinstance(a,list):
-#         try:
-#             b = a[0].tolist()
-#             d = [ x.tolist() for x in a ]
-#         except:
-#             d = a
-#         return d
-#     elif isinstance(a,dict):
-#         for k in a:
-#             try:
-#                 a[k] = a[k].tolist()
-#             except:
-#                 a[k] = a[k]
-#     return a
