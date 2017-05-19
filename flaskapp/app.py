@@ -44,8 +44,6 @@ def setup_db():
 
 # Run the flask server
 if __name__ == '__main__':
-    #from setup_db_default import main as init_db
-    #init_db()
-    # from openbabel_test import main as test_ob
-    # test_ob()
+    from setup_db_default import main as init_db
+    init_db()
     app.run(host='0.0.0.0')

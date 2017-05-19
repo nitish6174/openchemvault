@@ -18,7 +18,7 @@ success_count = 0
 # Modify database (1) or just loop through files and parse them (0)
 insert_mode = 1
 # Unbuffered output
-sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+# sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 
 def main():

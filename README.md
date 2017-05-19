@@ -8,43 +8,66 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
 ### With Docker
 
 * Install Docker on your machine  
-* Clone this repository
-* Download [cclib](https://github.com/cclib/cclib) repository inside the above downloaded ```cclib-web``` folder :  
-  ```git clone https://github.com/cclib/cclib.git```
+* Clone this repository  
+  ```bash
+  git clone https://github.com/nitish6174/cclib-web
+  ```
 * Build the Dockerfile  
-  ```sudo docker build -t cclib-web:latest .```
-* Run the built docker image  
-  ```sudo docker run -i -p 5000:5000 cclib-web```  
-  Enter ```y``` when the image runs to seed database
-* The application can now be accessed in browser at ```localhost:5000```
-* To stop the docker container running this application, first find the container id by ```sudo docker ps -a``` and then use ```sudo docker stop <CONTAINER ID>``` to stop it.
+  ```bash
+  sudo docker build -t cclib-web:latest .
+  ```  
+* Run the built docker image while providing the directory of log files
+  on host machine to mount it in docker container  
+  ```bash
+  sudo docker run -it -v <log_files_dir>:/data/ -p 5000:5000 cclib-web
+  ```  
+* To seed database, enter ```y``` when the image runs (currently not working in docker)  
+  Provide the data folder path as /data/ or a sub-directory of /data/  
+* The flask application can now be accessed in browser at ```localhost:5000```
+* To stop the docker container running this application,
+  first find the container id by ```sudo docker ps -a```
+  and then use ```sudo docker stop <CONTAINER ID>``` to stop it.
 
 ### Using python virtual environment
 
-**Note** : Python 3 is recommended. Just change the version numbers in steps below for Python 2.
+**Note** : Use Python 3. [OpenBabel](http://openbabel.org/docs/current/) setup is not added in the below steps.
+
+Below instructions are given for ubuntu
 
 * Install python pip and virtualenv  
-  ```sudo apt-get install python3 python3-pip```  
-  ```pip3 install virtualenv```  
-* Install MongoDB  
-  ```sudo apt-get install mongo```  
+  ```bash
+  sudo apt-get install python3 python3-pip
+  pip3 install virtualenv
+  ```  
+* Install MongoDB and start MongoDB server  
+  ```bash
+  sudo apt-get install mongo
+  sudo service mongodb start
+  ```  
 * Clone repository and setup virtualenv for project  
-  ```git clone https://github.com/nitish6174/cclib-web.git```  
-  ```cd cclib-web```  
-  ```virtualenv -p python3 venv_py3```  
+  ```bash
+  git clone https://github.com/nitish6174/cclib-web.git
+  cd cclib-web
+  virtualenv -p python3 venv_py3
+  ```  
 * Download [cclib](https://github.com/cclib/cclib) repository inside the ```cclib-web``` folder:  
-  ```git clone https://github.com/cclib/cclib.git```
+  ```bash
+  git clone https://github.com/cclib/cclib.git
+  ```  
 * Install pip dependencies and build cclib inside virtual environment  
-  ```source venv_py3/bin/activate```  
-  ```pip3 install -r requirements.txt```  
-  ```cd cclib```  
-  ```python3 setup.py build```  
-  ```python3 setup.py install```  
+  ```bash
+  source venv_py3/bin/activate
+  pip3 install -r requirements.txt
+  cd cclib
+  python3 setup.py build
+  python3 setup.py install
+  ```  
 * Running :  
   - Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
     (Run ```source venv_py3/bin/activate``` to enter virtual environment)
   * Goto ```flaskapp``` directory and run ```python3 app.py```  
-    This will start flask server on the machine at port 5000.
+  * To seed database, provide the data folder and other asked options.  
+    Then, flask server will start on the machine at port 5000.  
   * The application can now be accessed in browser at ```localhost:5000```
   * Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
 

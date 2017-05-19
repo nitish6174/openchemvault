@@ -1,18 +1,11 @@
 from cclib.parser import *
 from cclib.parser.utils import PeriodicTable
-try:
-    from cclib.io import ccopen
-except:
-    from cclib.parser import ccopen
-try:
-    from cclib.io import ccread
-except:
-    from cclib.parser import ccread
+from cclib.io import ccopen, ccread
 
 
 def processFile(file_path):
     logfile_type = ccopen(file_path)
-    if logfile_type!=None:
+    if logfile_type is not None:
         try:
             parsed_data = ccread(file_path)
             parsed_data.listify()
@@ -22,7 +15,7 @@ def processFile(file_path):
             }
             for x in parsed_data._attributes:
                 try:
-                    val = getattr(parsed_data,x)
+                    val = getattr(parsed_data, x)
                     res["attributes"][x] = val
                 except:
                     pass
