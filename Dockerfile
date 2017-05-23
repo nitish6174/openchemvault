@@ -29,8 +29,9 @@ RUN mkdir /openbabel && \
     wget https://github.com/openbabel/openbabel/archive/openbabel-2-4-1.tar.gz && \
     tar -xf openbabel-2-4-1.tar.gz -C /openbabel/ && \
     mkdir /openbabel/build
+RUN mkdir /app
 WORKDIR /openbabel/build
-RUN cmake /openbabel/openbabel-openbabel-2-4-1 -DPYTHON_BINDINGS=ON && \
+RUN cmake /openbabel/openbabel-openbabel-2-4-1 -DRUN_SWIG=ON -DPYTHON_BINDINGS=ON && \
     make && \
     make install
 # Install pip dependencies
@@ -42,5 +43,5 @@ COPY . /app
 WORKDIR /app/flaskapp
 RUN cp config.py.example config.py
 # Start flask application
-# ENTRYPOINT ["python3"]
-CMD ["python3", "app.py"]
+WORKDIR /app
+CMD ["python3", "run.py"]

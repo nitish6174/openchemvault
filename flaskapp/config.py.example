@@ -2,7 +2,7 @@
 static_file_max_age = 3600 * 24 * 7
 
 # Computational chemistry log file directory
-data_folder = "../data"
+data_folder = "data"
 
 # MongoDB variables
 mongo_host = "localhost"

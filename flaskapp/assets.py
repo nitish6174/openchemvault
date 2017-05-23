@@ -1,7 +1,8 @@
 from flask_assets import Bundle
 
+
 def getAssets():
-    bundles = { 
+    bundles = {
         'common_css': Bundle(
             'css/ext/bootstrap.min.css',
             'css/thin_scroll.css',
@@ -33,6 +34,15 @@ def getAssets():
         'upload_js': Bundle(
             'js/upload.js',
             output='public/upload.js',
+            filters='jsmin'),
+
+        'browse_css': Bundle(
+            'css/browse.css',
+            output='public/browse.css',
+            filters='cssmin'),
+        'browse_js': Bundle(
+            'js/browse.js',
+            output='public/browse.js',
             filters='jsmin'),
 
         'search_css': Bundle(

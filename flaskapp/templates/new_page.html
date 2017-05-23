@@ -5,8 +5,8 @@
 {# Page variables #}
 {% set head_title       = "Openchemistry-web" %}
 {% set meta_description = "Computational chemistry web repository" %}
-{% set assets_css       = "3Dviewer_css" %}
-{% set assets_js        = "3Dviewer_js" %}
+{% set assets_css       = "page_css" %}
+{% set assets_js        = "page_js" %}
 {% set nav_bar          = True %}
 {% set nav_title        = "Openchemistry-web" %}
 
@@ -19,18 +19,14 @@
 
 
 
+{# Body content #}
 {% block body %}
-
-<div class="container">
-    <div class="mol-container" id="molBox"></div>
-</div>
 
 {% endblock %}
 
 
 
+{# Scripts block #}
 {% block scripts %}
-
-<script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
 
 {% endblock %}

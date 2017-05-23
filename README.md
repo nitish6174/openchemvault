@@ -19,7 +19,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
 * Run the built docker image while providing the directory of log files
   on host machine to mount it in docker container  
   ```bash
-  sudo docker run -it -v <log_files_dir>:/data/ -p 5000:5000 cclib-web
+  sudo docker run -it -p 5000:5000 -v <log_files_dir>:/data/ cclib-web
   ```  
 * To seed database, enter ```y``` when the image runs (currently not working in docker)  
   Provide the data folder path as /data/ or a sub-directory of /data/  

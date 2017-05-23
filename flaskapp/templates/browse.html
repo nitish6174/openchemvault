@@ -4,11 +4,11 @@
 
 {# Page variables #}
 {% set head_title       = "Openchemistry-web" %}
-{% set assets_css       = "page_css" %}
-{% set assets_js        = "page_js" %}
+{% set meta_description = "Computational chemistry web repository" %}
+{% set assets_css       = "browse_css" %}
+{% set assets_js        = "browse_js" %}
 {% set nav_bar          = True %}
 {% set nav_title        = "Openchemistry-web" %}
-{% set search_bar       = True %}
 
 
 
@@ -21,6 +21,14 @@
 
 {# Body content #}
 {% block body %}
+
+<div class="container-fluid">
+
+    <h2 class="text-center">Browse data repository</h2>
+
+    Molecules found : {{ count }}
+
+</div>
 
 {% endblock %}
 

@@ -16,7 +16,7 @@ $(document).ready(function(){
         data.append('file', file);
 
         xhr = new XMLHttpRequest();
-        xhr.open('POST', "/upload", true);
+        xhr.open('POST', "/api/upload", true);
         xhr.send(data);
         xhr.onreadystatechange = function(ev){
             if (xhr.readyState==4) {
@@ -90,6 +90,7 @@ $(document).ready(function(){
                     {
                         var msg = "Oops! There was some issue displaying the data from this file";
                         result_msg.innerHTML = msg;
+                        console.log(e.message);
                     }
                     progress_bar.classList.remove("success");
                     void progress_bar.offsetWidth;
@@ -97,7 +98,8 @@ $(document).ready(function(){
                 }
                 else
                 {
-                    result_msg.innerHTML = "Sorry! Your query could not be completed due to some error";
+                    var msg = "Sorry! Your query could not be completed due to some error";
+                    result_msg.innerHTML = msg;
                 }
             }
         };

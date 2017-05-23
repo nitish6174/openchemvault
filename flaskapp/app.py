@@ -2,10 +2,10 @@ from flask import Flask, send_from_directory
 from flask_compress import Compress
 from flask_assets import Environment
 
-import config as config
-import shared_variables as var
-from assets import getAssets
-from routes import routes_module
+import flaskapp.config as config
+import flaskapp.shared_variables as var
+from flaskapp.assets import getAssets
+from flaskapp.routes import routes_module
 
 # Initialize app
 app = Flask(__name__)
@@ -29,21 +29,8 @@ assets.register(getAssets())
 app.url_map.strict_slashes = False
 app.register_blueprint(routes_module)
 
+
 # Static XYZ data files
 @app.route('/data/<path:filename>')
 def loadXYZ(filename):
-    return send_from_directory(app.static_folder+"/data_files", filename)
-
-
-# Click command for setting up database
-@app.cli.command()
-def setup_db():
-    from setup_db_default import main as init_db
-    init_db()
-
-
-# Run the flask server
-if __name__ == '__main__':
-    from setup_db_default import main as init_db
-    init_db()
-    app.run(host='0.0.0.0')
+    return send_from_directory(app.static_folder + "/data_files", filename)

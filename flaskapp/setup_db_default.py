@@ -2,16 +2,19 @@ import math
 import os
 import sys
 import json
-import pymongo
+
+from pymongo import MongoClient
 import cclib
 
-import config
-from process import processFile
+import flaskapp.config as config
+from flaskapp.process import process_file
 
 # Default values
 default_db_host = config.mongo_host
 default_db_port = config.mongo_port
 default_db_name = config.mongo_name
+default_data_folder_path = config.data_folder
+# Database collection name
 db_collection_name = config.mongo_collection
 # Store count of processed files
 success_count = 0
@@ -34,7 +37,7 @@ def main():
     choice = input("Proceed to setup database (N/y) : ")
     if choice == "y" or choice == "Y":
         try:
-            db_conn = pymongo.MongoClient(default_db_host, int(default_db_port))
+            db_conn = MongoClient(default_db_host, int(default_db_port))
             db = db_conn[default_db_name]
             db_cursor = db[db_collection_name]
 
@@ -72,13 +75,13 @@ def iterate(dir_path, db_cursor, insert_mode=0):
 # Process a file and add to database if parsing was successful
 def add_file_to_database(file_path, db_cursor, insert_mode=0):
     print("Processing file : ", file_path, ". . . ", end="")
-    res = processFile(file_path)
+    res = process_file(file_path)
     if res["success"]:
         if "formula_string" not in res["attributes"]:
             print("  Failed: Unable to determine molecular formula")
         else:
             global success_count
-            success_count  += 1
+            success_count += 1
             print("  Done!")
             if insert_mode == 1:
                 insert_data(res["attributes"], db_cursor)
@@ -89,7 +92,7 @@ def add_file_to_database(file_path, db_cursor, insert_mode=0):
 # Insert given parsed data in database
 def insert_data(data, db_cursor):
     formula = data["formula_string"]
-    res = db_cursor.find_one({"formula": formula},{"_id":1})
+    res = db_cursor.find_one({"formula": formula}, {"_id": 1})
     try:
         if res is None:
             db_cursor.insert_one({"formula": formula, "log_files": [data]})
@@ -111,7 +114,7 @@ def distance_list(atom_coords):
     for i in range(l):
         for j in range(l):
             if i != j:
-                dist_list.append(distance(atom_coords[i],atom_coords[j]))
+                dist_list.append(distance(atom_coords[i], atom_coords[j]))
     dist_list.sort()
     return dist_list
 
@@ -120,13 +123,8 @@ def distance_list(atom_coords):
 def distance(p1, p2):
     sq_sum = 0
     for i in range(3):
-        sq_sum  += (p1[i]-p2[i])**2
+        sq_sum += (p1[i] - p2[i])**2
     return math.sqrt(sq_sum)
-
-
-# Utility function to display indented JSON data
-def show(d):
-    print(json.dumps(d,indent=4))
 
 
 if __name__ == '__main__':
