@@ -15,8 +15,8 @@ def home_page():
 @routes_module.route("/browse", methods=["GET"])
 def list_page():
     if request.method == "GET":
-        count = var.mongo.db[config.mongo_collection].count({})
-        return render_template("browse.html", count=count)
+        docs = var.mongo.db[config.mongo_collection].find({})
+        return render_template("browse.html", docs=docs)
 
 
 # Search for molecules in database
