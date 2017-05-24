@@ -37,8 +37,10 @@
 
     <h2 class="text-center">Browse data repository</h2>
 
-    <h3>Results are grouped by molecular formula</h3>
+    <h3 class="text-center text-muted">Results are grouped by molecular formula</h3>
 
+    <div class="row">
+    <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
     {% for x in docs %}
         <div class='accordion-item'>
         <div class='accordion-title' onclick='$(this).next().next().toggle();'>
@@ -53,16 +55,30 @@
         </div>
         <hr class='hr-no-gap'>
         <div class='accordion-text'>
-            <ul>
             {% for y in x["log_files"] %}
-                {% if "metadata" in y %}
-                    <li>{{ y["metadata"]|string }}</li>
-                {% endif %}
+                <div class="card">
+                    {% if "inchi" in y %}
+                        <div class="card-text">
+                        <span class="card-text-title">InChI :</span>
+                        <span class="card-text-desc">{{ y["inchi"] }}</span>
+                        </div>
+                    {% endif %}
+                    {% if "metadata" in y %}
+                    {% for k in y["metadata"] %}
+                        <div class="card-text">
+                        <span class="card-text-title">{{ k }} :</span>
+                        <span class="card-text-desc">{{ y["metadata"][k] }}</span>
+                        </div>
+                        {# <li>{{ y["metadata"]|string }}</li> #}
+                    {% endfor %}
+                    {% endif %}
+                    </div>
             {% endfor %}
-            </ul>
         </div>
         </div>
     {% endfor %}
+    </div>
+    </div>
 
 </div>
 

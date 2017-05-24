@@ -4,6 +4,7 @@
     background-color: hsla(0, 0%, 100%, 0.5);
     margin-top: 10px;
     box-shadow: 0px 0px 3px 0px #ccc;
+    transition: box-shadow 0.2s;
 }
 .accordion-title {
     padding: 10px;
@@ -25,4 +26,22 @@
 }
 .accordion-item:hover {
     box-shadow: 0px 0px 10px 0px #999;
+}
+
+
+.card {
+    background-color: #fff;
+    margin-top: 10px;
+    padding: 5px;
+    padding-left: 15px;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px 0px #ccc;
+    transition: box-shadow 0.2s;
+}
+.card:hover {
+    box-shadow: 1px 1px 5px 0px #999;
+}
+
+.card-text-title {
+    font-weight: 600;
 }

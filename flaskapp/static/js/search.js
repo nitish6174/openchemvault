@@ -12,7 +12,7 @@ $(document).ready(function(){
         var query_type = $("#searchForm input[name='query-type']").val();
         var query_text = $("#searchForm input[name='query-text']").val();
 
-        $.post("/search", {
+        $.post("/api/search", {
             query_type: query_type,
             query_text: query_text
         }, function(data, status){
