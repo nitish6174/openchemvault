@@ -19,7 +19,7 @@
 
 
 
-{% macro formula(a) -%}
+{% macro disp_formula(a) -%}
     {% for i in range(0, a|length, 2) -%}
     {{- a[i] -}}
     {%- if a[i+1] != '1' -%}
@@ -35,48 +35,64 @@
 
 <div class="container-fluid">
 
-    <h2 class="text-center">Browse data repository</h2>
-
-    <h3 class="text-center text-muted">Results are grouped by molecular formula</h3>
+    <div class="row">
+    <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+        <h2 class="text-center">Browse data repository</h2>
+        {% if mode == "home" %}
+            {% if mols.count() > 0 %}
+            <h3 class="text-center text-muted">Choose a molecular formula</h3>
+            {% else %}
+            <h3 class="text-center text-muted">No log file seems to be present in the data repository currently</h3>
+            {% endif %}
+        {% else %}
+            {% if docs.count() > 0 %}
+            <h3 class="text-center text-muted">Showing {{ docs.count() }} results for : {{ disp_formula(formula.split()) }}</h3>
+            <a href="/browse" class="no-style-link">
+                <h4><i class="glyphicon glyphicon-chevron-left"></i> Back to menu</h4>
+            </a>
+            <h3 class="text-center text-muted">Choose a result to view details</h3>
+            {% else %}
+            <h3 class="text-center text-muted">No results found for the queried formula</h3>
+            {% endif %}
+        {% endif %}
+    </div>
+    </div>
 
     <div class="row">
     <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
-    {% for x in docs %}
-        <div class='accordion-item'>
-        <div class='accordion-title' onclick='$(this).next().next().toggle();'>
-        <h4>
-            <i class='text-muted glyphicon glyphicon-menu-down'></i>
-            {{ formula(a=x["formula"].split()) }}
-            <span class="text-muted">
-            &bullet;
-            {{ x["log_files"]|length }} result(s)
-            </span>
-        </h4>
-        </div>
-        <hr class='hr-no-gap'>
-        <div class='accordion-text'>
-            {% for y in x["log_files"] %}
-                <div class="card">
-                    {% if "inchi" in y %}
-                        <div class="card-text">
-                        <span class="card-text-title">InChI :</span>
-                        <span class="card-text-desc">{{ y["inchi"] }}</span>
-                        </div>
-                    {% endif %}
-                    {% if "metadata" in y %}
-                    {% for k in y["metadata"] %}
-                        <div class="card-text">
-                        <span class="card-text-title">{{ k }} :</span>
-                        <span class="card-text-desc">{{ y["metadata"][k] }}</span>
-                        </div>
-                        {# <li>{{ y["metadata"]|string }}</li> #}
-                    {% endfor %}
-                    {% endif %}
+    <div class="ul-card">
+        {% if mode == "home" %}
+        {% for x in mols %}
+            <a href="/browse/{{ x['formula'] }}" class="no-style-link">
+            <div class="li-card">
+                <span class="text-muted right">
+                {{ x["parsed_files"]|length }} result(s)
+                </span>
+                {{ disp_formula(a=x["formula"].split()) }}
+            </div>
+            </a>
+        {% endfor %}
+        {% else %}
+        {% for x in docs %}
+            <div class="li-card">
+                {% if "inchi" in x %}
+                    <div class="card-text">
+                    <span class="card-text-title">InChI :</span>
+                    <span class="card-text-desc">{{ x["inchi"] }}</span>
                     </div>
-            {% endfor %}
-        </div>
-        </div>
-    {% endfor %}
+                {% endif %}
+                {% if "metadata" in x %}
+                {% for k in x["metadata"] %}
+                    <div class="card-text">
+                    <span class="card-text-title">{{ k }} :</span>
+                    <span class="card-text-desc">{{ x["metadata"][k] }}</span>
+                    </div>
+                {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        {% endif %}
+    </div>
     </div>
     </div>
 

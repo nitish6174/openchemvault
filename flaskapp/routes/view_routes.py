@@ -1,8 +1,9 @@
+import urllib.parse
+
 from flask import request, render_template, redirect
 
 from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
-import flaskapp.config as config
 
 
 # Home page
@@ -11,12 +12,29 @@ def home_page():
     return redirect("/upload")
 
 
-# List entries in database
+# List molecules in database
 @routes_module.route("/browse", methods=["GET"])
-def list_page():
+def browse_home_page():
     if request.method == "GET":
-        docs = var.mongo.db[config.mongo_collection].find({})
-        return render_template("browse.html", docs=docs)
+        mols = var.mongo.db.molecule.find({}).sort("formula")
+        return render_template("browse.html", mode="home", mols=mols)
+
+
+# List files for a molecule in database
+@routes_module.route("/browse/<formula>", methods=["GET"])
+def browse_molecule_page(formula):
+    if request.method == "GET":
+        formula = urllib.parse.unquote(formula)
+        db = var.mongo.db
+        mol_doc = db.molecule.find_one({"formula": formula})
+        docs = []
+        if mol_doc is not None:
+            ids = mol_doc["parsed_files"]
+            docs = db.parsed_file.find({"_id": {"$in": ids}})
+        return render_template("browse.html",
+                               mode="molecule",
+                               formula=formula,
+                               docs=docs)
 
 
 # Search for molecules in database

@@ -7,7 +7,7 @@
 	border-radius: 0px;
 }
 ::-webkit-scrollbar-thumb {
-	border-radius: 4px;
+	border-radius: 0px;
 	background-color: hsla(0,0%,60%,0.7);
 }
 ::-webkit-scrollbar-thumb:hover {
