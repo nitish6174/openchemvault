@@ -45,6 +45,15 @@ def getAssets():
             output='public/browse.js',
             filters='jsmin'),
 
+        'view_css': Bundle(
+            'css/view.css',
+            output='public/view.css',
+            filters='cssmin'),
+        'view_js': Bundle(
+            'js/view.js',
+            output='public/view.js',
+            filters='jsmin'),
+
         'search_css': Bundle(
             'css/search.css',
             output='public/search.css',

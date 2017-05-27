@@ -52,6 +52,15 @@ $(document).ready(function(){
                                 result_box_text += "</div>";
                                 result_box_text += "</div>";
                             }
+                            if(d["InChI"]!=undefined)
+                            {
+                                result_box_text += "<div class='accordion-item'>";
+                                result_box_text += "<div class='accordion-title' onclick='$(this).next().next().toggle();'>";
+                                result_box_text += "<h4><i class='text-muted glyphicon glyphicon-menu-down'></i> InChI</h4></div>";
+                                result_box_text += "<hr class='hr-no-gap'>";
+                                result_box_text += "<div class='accordion-text active'>"+d["InChI"]+"</div>";
+                                result_box_text += "</div>";
+                            }
                             for(var key in d["attributes"])
                             {
                                 var result_line_val = d["attributes"][key];

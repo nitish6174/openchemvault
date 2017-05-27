@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+
+
+{# Page variables #}
+{% set head_title = "Openchemistry-web" %}
+{% set assets_css = "view_css" %}
+{% set assets_js  = "view_js" %}
+{% set nav_bar    = True %}
+{% set nav_title  = "Openchemistry-web" %}
+
+
+
+{# Head block #}
+{% block head %}
+
+{% endblock %}
+
+
+
+{% macro disp_formula(a) -%}
+    {% for i in range(0, a|length, 2) -%}
+    {{- a[i] -}}
+    {%- if a[i+1] != '1' -%}
+        <sub>{{ a[i+1] -}}</sub>
+    {%- endif -%}
+    {%- endfor %}
+{%- endmacro %}
+
+
+
+{# Body content #}
+{% block body %}
+
+<div class="container-fluid">
+
+{% if success == 0 %}
+    <h3 class="text-center">This log file does not exist</h3>
+{% else %}
+    <div class="row">
+    <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+    {# {% if "xyz_data" in x %} #}
+        {# <div class="accordion-item"> #}
+        {# <div class="accordion-title" onclick="$(this).next().next().toggle();"> #}
+        {# <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> 3D model</h4></div> #}
+        {# <hr class="hr-no-gap"> #}
+        {# <div class="accordion-text active"></div> #}
+        {# </div> #}
+    {# {% endif %} #}
+    {% for x in doc["attributes"] %}
+        <div class="accordion-item">
+        <div class="accordion-title" onclick="$(this).next().next().toggle();">
+        <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> {{ x }}</h4></div>
+        <hr class="hr-no-gap">
+        <div class="accordion-text">{{ doc["attributes"][x] }}</div>
+        </div>
+    {% endfor %}
+    </div>
+    </div>
+{% endif %}
+
+</div>
+
+{% endblock %}
+
+
+
+{# Scripts block #}
+{% block scripts %}
+
+{% endblock %}

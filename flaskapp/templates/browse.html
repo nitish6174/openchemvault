@@ -74,22 +74,18 @@
         {% endfor %}
         {% else %}
         {% for x in docs %}
+            <a href="/view/{{ x['_id'] }}" class="no-style-link">
             <div class="li-card">
-                {% if "inchi" in x %}
-                    <div class="card-text">
-                    <span class="card-text-title">InChI :</span>
-                    <span class="card-text-desc">{{ x["inchi"] }}</span>
-                    </div>
-                {% endif %}
-                {% if "metadata" in x %}
-                {% for k in x["metadata"] %}
+                {% if "metadata" in x["attributes"] %}
+                {% for k in x["attributes"]["metadata"] %}
                     <div class="card-text">
                     <span class="card-text-title">{{ k }} :</span>
-                    <span class="card-text-desc">{{ x["metadata"][k] }}</span>
+                    <span class="card-text-desc">{{ x["attributes"]["metadata"][k] }}</span>
                     </div>
                 {% endfor %}
                 {% endif %}
             </div>
+            </a>
         {% endfor %}
         {% endif %}
     </div>

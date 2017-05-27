@@ -97,6 +97,11 @@ def add_file_to_database(file_path, db, insert_mode=0):
 # Insert given parsed data in database
 def insert_data(data, db):
     formula = data["formula_string"]
+    data = {
+        "attributes": data,
+        "formula_string": formula
+    }
+    data["attributes"].pop("formula_string", None)
     res = db.molecule.find_one({"formula": formula}, {"_id": 1})
     try:
         if res is None:

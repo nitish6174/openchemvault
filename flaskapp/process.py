@@ -27,7 +27,7 @@ def process_file(file_path):
             if ob_import is True:
                 inchi = get_InChI(res["attributes"])
                 if inchi is not None:
-                    res["attributes"]["InChI"] = inchi
+                    res["InChI"] = inchi
         except:
             res = {"success": False}
     else:

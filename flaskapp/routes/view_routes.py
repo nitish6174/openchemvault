@@ -1,9 +1,11 @@
 import urllib.parse
 
 from flask import request, render_template, redirect
+from bson import ObjectId
 
 from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
+from flaskapp.process import XYZ_data
 
 
 # Home page
@@ -35,6 +37,23 @@ def browse_molecule_page(formula):
                                mode="molecule",
                                formula=formula,
                                docs=docs)
+
+
+# View a particular parsed file
+@routes_module.route("/view/<doc_id>", methods=["GET"])
+def view_file_page(doc_id):
+    if request.method == "GET":
+        db = var.mongo.db
+        doc = db.parsed_file.find_one({"_id": ObjectId(doc_id)})
+        success = 0
+        if doc is not None:
+            success = 1
+            xyz_data = XYZ_data(doc["attributes"])
+            if xyz_data != "":
+                doc["xyz_data"] = xyz_data
+            return render_template("view.html", success=success, doc=doc)
+        else:
+            return render_template("view.html", success=success)
 
 
 # Search for molecules in database
