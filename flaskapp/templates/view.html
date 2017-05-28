@@ -39,17 +39,19 @@
 {% else %}
     <div class="row">
     <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
-    {# {% if "xyz_data" in x %} #}
-        {# <div class="accordion-item"> #}
-        {# <div class="accordion-title" onclick="$(this).next().next().toggle();"> #}
-        {# <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> 3D model</h4></div> #}
-        {# <hr class="hr-no-gap"> #}
-        {# <div class="accordion-text active"></div> #}
-        {# </div> #}
-    {# {% endif %} #}
+    {% if "xyz_data" in doc %}
+        <div class="accordion-item">
+        <div class="accordion-title" onclick="$(this).next().next().slideToggle(100);">
+        <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> 3D model</h4></div>
+        <hr class="hr-no-gap">
+        <div class="accordion-text active">
+            <div class="mol-container" id="molBox"></div>
+        </div>
+        </div>
+    {% endif %}
     {% for x in doc["attributes"] %}
         <div class="accordion-item">
-        <div class="accordion-title" onclick="$(this).next().next().toggle();">
+        <div class="accordion-title" onclick="$(this).next().next().slideToggle(100);">
         <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> {{ x }}</h4></div>
         <hr class="hr-no-gap">
         <div class="accordion-text">{{ doc["attributes"][x] }}</div>
@@ -67,5 +69,14 @@
 
 {# Scripts block #}
 {% block scripts %}
+
+<script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
+<script>
+    {% if "xyz_data" in doc %}
+    xyz_data = `{{ doc['xyz_data'] }}`;
+    {% else %}
+    xyz_data = "";
+    {% endif %}
+</script>
 
 {% endblock %}

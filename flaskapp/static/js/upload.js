@@ -42,9 +42,9 @@ $(document).ready(function(){
                             var result_box_text = "";
                             if(d["xyz_data"]!="")
                             {
-                                // console.log(d["xyz_data"]);
+                                console.log(d["xyz_data"]);
                                 result_box_text += "<div class='accordion-item'>";
-                                result_box_text += "<div class='accordion-title' onclick='$(this).next().next().toggle();'>";
+                                result_box_text += "<div class='accordion-title' onclick='$(this).next().next().slideToggle(100);'>";
                                 result_box_text += "<h4><i class='text-muted glyphicon glyphicon-menu-down'></i> 3D model</h4></div>";
                                 result_box_text += "<hr class='hr-no-gap'>";
                                 result_box_text += "<div class='accordion-text active'>";
@@ -55,7 +55,7 @@ $(document).ready(function(){
                             if(d["InChI"]!=undefined)
                             {
                                 result_box_text += "<div class='accordion-item'>";
-                                result_box_text += "<div class='accordion-title' onclick='$(this).next().next().toggle();'>";
+                                result_box_text += "<div class='accordion-title' onclick='$(this).next().next().slideToggle(100);'>";
                                 result_box_text += "<h4><i class='text-muted glyphicon glyphicon-menu-down'></i> InChI</h4></div>";
                                 result_box_text += "<hr class='hr-no-gap'>";
                                 result_box_text += "<div class='accordion-text active'>"+d["InChI"]+"</div>";
