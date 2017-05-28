@@ -4,7 +4,7 @@ import json
 from flask import request, jsonify
 
 from flaskapp.routes import routes_module
-from flaskapp.routes.api_process import newLogFileName
+from flaskapp.routes.route_process import newLogFileName
 
 from flaskapp.process import process_file
 import flaskapp.shared_variables as var

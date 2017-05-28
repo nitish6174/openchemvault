@@ -7,6 +7,7 @@ def getAssets():
             'css/ext/bootstrap.min.css',
             'css/thin_scroll.css',
             'css/common.css',
+            'css/widgets.css',
             'css/navbar.css',
             output='public/common.css',
             filters='cssmin'),

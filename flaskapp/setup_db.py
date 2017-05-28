@@ -105,7 +105,16 @@ def insert_data(data, db):
     res = db.molecule.find_one({"formula": formula}, {"_id": 1})
     try:
         if res is None:
-            db.molecule.insert_one({"formula": formula, "parsed_files": []})
+            temp = formula.split()
+            elems = [temp[i] for i in range(len(temp)) if i%2==0]
+            elem_counts = [temp[i] for i in range(len(temp)) if i%2==1]
+            doc = {
+                "formula": formula,
+                "elements": elems,
+                "element_counts": elem_counts,
+                "parsed_files": []
+            }
+            db.molecule.insert_one(doc)
         res = db.parsed_file.insert_one(data)
         db.molecule.update_one({"formula": formula},
                                {"$push": {"parsed_files": res.inserted_id}})

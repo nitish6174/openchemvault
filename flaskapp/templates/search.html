@@ -18,6 +18,17 @@
 
 
 
+{% macro disp_formula(a) -%}
+    {% for i in range(0, a|length, 2) -%}
+    {{- a[i] -}}
+    {%- if a[i+1] != '1' -%}
+        <sub>{{ a[i+1] -}}</sub>
+    {%- endif -%}
+    {%- endfor %}
+{%- endmacro %}
+
+
+
 {# Body content #}
 {% block body %}
 
@@ -39,7 +50,11 @@
                 <div class="form-group">
                     <label for="logFileInput" class="col-sm-3 control-label">Query</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" name="query-text">
+                        {% set query_value = "" %}
+                        {% if search_status is defined %}
+                        {% set query_value = query %}
+                        {% endif %}
+                        <input type="text" class="form-control" name="query-text" value="{{ query_value }}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -53,8 +68,30 @@
     <hr>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            <h3 id="resultMsg" class="text-center"></h3>
-            <div id="resultBox"></div>
+            {% if search_status is defined %}
+            <h3 id="resultQuery" class="text-center">You queried for : {{ query }} ({{ search_type }})</h3>
+            <div class="row">
+            <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
+                {% if search_status == 1 %}
+                    <h4 class="text-muted" id="resultStatus">Found {{ molecules.count() }} result(s)</h4>
+                    <div class="ul-card">
+                        {% for x in molecules %}
+                            <a href="/browse/{{ x['formula'] }}" class="no-style-link">
+                            <div class="li-card">
+                                <span class="text-muted right">
+                                {{ x["parsed_files"]|length }} result(s)
+                                </span>
+                                {{ disp_formula(a=x["formula"].split()) }}
+                            </div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <h4 class="text-muted" id="resultStatus">{{ message }}</h4>
+                {% endif %}
+            </div>
+            </div>
+            {% endif %}
         </div>
     </div>
 

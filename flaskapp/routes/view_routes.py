@@ -63,6 +63,39 @@ def search_page():
         return render_template("search.html")
 
 
+# Search results
+@routes_module.route("/search/type=<search_type>:query=<query>", methods=["GET"])
+def search_results_page(search_type, query):
+    if request.method == "GET":
+        allowed_search_types = ["formula"]
+        if search_type in allowed_search_types:
+            query = urllib.parse.unquote(query)
+            db = var.mongo.db
+            temp = query.split()
+            elems = [temp[i] for i in range(len(temp)) if i%2==0]
+            mol_docs = db.molecule.find({"elements": {"$all": elems}})
+            if mol_docs.count() > 0:
+                return render_template("search.html",
+                                       search_status=1,
+                                       query=query,
+                                       search_type=search_type,
+                                       molecules=mol_docs)
+            else:
+                message = "No results found for this query"
+                return render_template("search.html",
+                                       search_status=0,
+                                       query=query,
+                                       search_type=search_type,
+                                       message=message)
+        else:
+            message = "No results found for this query"
+            return render_template("search.html",
+                                   search_status=0,
+                                   query=query,
+                                   search_type=search_type,
+                                   message=message)
+
+
 # Upload a log file and view parsed info from it
 @routes_module.route("/upload", methods=["GET"])
 def upload_file_page():
