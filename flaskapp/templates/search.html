@@ -73,7 +73,7 @@
             <div class="row">
             <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
                 {% if search_status == 1 %}
-                    <h4 class="text-muted" id="resultStatus">Found {{ molecules.count() }} result(s)</h4>
+                    <h4 class="text-muted" id="resultStatus">Found {{ molecules|length }} result(s)</h4>
                     <div class="ul-card">
                         {% for x in molecules %}
                             <a href="/browse/{{ x['formula'] }}" class="no-style-link">

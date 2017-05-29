@@ -33,12 +33,12 @@ def parse_file(file_path):
     else:
         res = {"success": False}
     if res["success"]:
-        chemical_formula(res["attributes"])
+        make_chemical_formula(res["attributes"])
         res["xyz_data"] = XYZ_data(res["attributes"])
     return res
 
 
-def chemical_formula(d):
+def make_chemical_formula(d):
     periodic_obj = PeriodicTable()
     try:
         atom_dict = {}

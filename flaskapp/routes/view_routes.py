@@ -6,6 +6,7 @@ from bson import ObjectId
 from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
 from flaskapp.process.chem_process import XYZ_data
+import flaskapp.process.formula_util as util
 
 
 # Home page
@@ -70,11 +71,17 @@ def search_results_page(search_type, query):
         allowed_search_types = ["formula"]
         if search_type in allowed_search_types:
             query = urllib.parse.unquote(query)
+            q_formula_d = util.formula_query_parsing(query)
+            elems, counts = util.formula_dict_to_array(q_formula_d)
             db = var.mongo.db
-            temp = query.split()
-            elems = [temp[i] for i in range(len(temp)) if i%2==0]
             mol_docs = db.molecule.find({"elements": {"$all": elems}})
             if mol_docs.count() > 0:
+                mol_docs = [x for x in mol_docs]
+                for x in mol_docs:
+                    x_formula_d = util.formula_array_to_dict(x["elements"],
+                                                             x["element_counts"])
+                    x["dist"] = util.formula_distance(q_formula_d, x_formula_d)
+                mol_docs.sort(key=lambda x: x["dist"])
                 return render_template("search.html",
                                        search_status=1,
                                        query=query,
