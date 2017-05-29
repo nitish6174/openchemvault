@@ -8,7 +8,7 @@ except:
     ob_import = False
 
 
-def process_file(file_path):
+def parse_file(file_path):
     logfile_type = ccopen(file_path)
     if logfile_type is not None:
         try:

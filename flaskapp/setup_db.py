@@ -7,7 +7,7 @@ from pymongo import MongoClient
 import cclib
 
 import flaskapp.config as config
-from flaskapp.process import process_file
+from flaskapp.process.chem_process import parse_file
 
 # Database configuration
 db_host = config.mongo_host
@@ -80,7 +80,7 @@ def iterate(dir_path, db, insert_mode=0):
 # Process a file and add to database if parsing was successful
 def add_file_to_database(file_path, db, insert_mode=0):
     print("Processing file : ", file_path, ". . . ", end="")
-    res = process_file(file_path)
+    res = parse_file(file_path)
     if res["success"]:
         if "formula_string" not in res["attributes"]:
             print("  Failed: Unable to determine molecular formula")

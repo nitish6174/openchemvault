@@ -5,7 +5,7 @@ from bson import ObjectId
 
 from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
-from flaskapp.process import XYZ_data
+from flaskapp.process.chem_process import XYZ_data
 
 
 # Home page

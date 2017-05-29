@@ -4,9 +4,8 @@ import json
 from flask import request, jsonify
 
 from flaskapp.routes import routes_module
-from flaskapp.routes.route_process import newLogFileName
-
-from flaskapp.process import process_file
+from flaskapp.process.file_handle import make_new_file_name
+from flaskapp.process.chem_process import parse_file
 import flaskapp.shared_variables as var
 
 # Directory where uploaded files will be saved temporarily
@@ -30,8 +29,8 @@ def upload_file_api():
         f = request.files["file"]
         if not os.path.exists(dir_path):
             os.mkdir(dir_path)
-        new_log_file_name = newLogFileName()
+        new_log_file_name = make_new_file_name()
         f.save(new_log_file_name)
-        d = process_file(new_log_file_name)
+        d = parse_file(new_log_file_name)
         os.remove(new_log_file_name)
         return json.dumps(d, sort_keys=True)

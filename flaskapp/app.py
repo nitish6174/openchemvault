@@ -4,7 +4,7 @@ from flask_assets import Environment
 
 import flaskapp.config as config
 import flaskapp.shared_variables as var
-from flaskapp.assets import getAssets
+from flaskapp.assets import get_assets
 from flaskapp.routes import routes_module
 
 # Initialize app
@@ -23,7 +23,7 @@ var.mongo.init_app(app, config_prefix="MONGO")
 
 # Add assets to app
 assets = Environment(app)
-assets.register(getAssets())
+assets.register(get_assets())
 
 # Add app routes
 app.url_map.strict_slashes = False

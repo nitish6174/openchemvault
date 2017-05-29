@@ -1,7 +1,7 @@
 from flask_assets import Bundle
 
 
-def getAssets():
+def get_assets():
     bundles = {
         'common_css': Bundle(
             'css/ext/bootstrap.min.css',
