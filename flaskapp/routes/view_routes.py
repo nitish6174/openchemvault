@@ -72,35 +72,33 @@ def search_results_page(search_type, query):
         if search_type in allowed_search_types:
             query = urllib.parse.unquote(query)
             q_formula_d = util.formula_query_parsing(query)
-            elems, counts = util.formula_dict_to_array(q_formula_d)
-            db = var.mongo.db
-            mol_docs = db.molecule.find({"elements": {"$all": elems}})
-            if mol_docs.count() > 0:
-                mol_docs = [x for x in mol_docs]
-                for x in mol_docs:
-                    x_formula_d = util.formula_array_to_dict(x["elements"],
-                                                             x["element_counts"])
-                    x["dist"] = util.formula_distance(q_formula_d, x_formula_d)
-                mol_docs.sort(key=lambda x: x["dist"])
-                return render_template("search.html",
-                                       search_status=1,
-                                       query=query,
-                                       search_type=search_type,
-                                       molecules=mol_docs)
+            if q_formula_d is not None:
+                elems, counts = util.formula_dict_to_array(q_formula_d)
+                db = var.mongo.db
+                mol_docs = db.molecule.find({"elements": {"$all": elems}})
+                if mol_docs.count() > 0:
+                    mol_docs = [x for x in mol_docs]
+                    for x in mol_docs:
+                        x_formula_d = util.formula_array_to_dict(x["elements"],
+                                                                 x["element_counts"])
+                        x["dist"] = util.formula_distance(q_formula_d, x_formula_d)
+                    mol_docs.sort(key=lambda x: x["dist"])
+                    return render_template("search.html",
+                                           search_status=1,
+                                           query=query,
+                                           search_type=search_type,
+                                           molecules=mol_docs)
+                else:
+                    message = "No results found for this query"
             else:
-                message = "No results found for this query"
-                return render_template("search.html",
-                                       search_status=0,
-                                       query=query,
-                                       search_type=search_type,
-                                       message=message)
+                message = "Invalid formula"
         else:
-            message = "No results found for this query"
-            return render_template("search.html",
-                                   search_status=0,
-                                   query=query,
-                                   search_type=search_type,
-                                   message=message)
+            message = "Invalid search type"
+        return render_template("search.html",
+                               search_status=0,
+                               query=query,
+                               search_type=search_type,
+                               message=message)
 
 
 # Upload a log file and view parsed info from it
