@@ -18,17 +18,6 @@
 
 
 
-{% macro disp_formula(a) -%}
-    {% for i in range(0, a|length, 2) -%}
-    {{- a[i] -}}
-    {%- if a[i+1] != '1' -%}
-        <sub>{{ a[i+1] -}}</sub>
-    {%- endif -%}
-    {%- endfor %}
-{%- endmacro %}
-
-
-
 {# Body content #}
 {% block body %}
 
@@ -39,22 +28,17 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form class="form-horizontal" id="searchForm">
+                {# This list is defined in view_routes.py and search.js also #}
+                {% set search_fields = {
+                    "formula": ""
+                } %}
+                {% for x in params %}
+                    {% set _temp = search_fields.update({x: params[x]}) %}
+                {% endfor %}
                 <div class="form-group">
-                    <label for="query-type" class="col-sm-3 control-label">Search By</label>
+                    <label for="search-formula-input" class="col-sm-3 control-label">Molecular formula</label>
                     <div class="col-sm-9">
-                        <div class="radio">
-                          <label><input type="radio" name="query-type" value="formula" checked="true">Molecular formula</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="logFileInput" class="col-sm-3 control-label">Query</label>
-                    <div class="col-sm-9">
-                        {% set query_value = "" %}
-                        {% if search_status is defined %}
-                        {% set query_value = query %}
-                        {% endif %}
-                        <input type="text" class="form-control" name="query-text" value="{{ query_value }}">
+                        <input type="text" class="form-control" name="search-formula-input" value="{{ search_fields['formula'] }}">
                     </div>
                 </div>
                 <div class="form-group">
@@ -68,29 +52,36 @@
     <hr>
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
-            {% if search_status is defined %}
-            <h3 id="resultQuery" class="text-center">You queried for : {{ query }} ({{ search_type }})</h3>
-            <div class="row">
-            <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
-                {% if search_status == 1 %}
-                    <h4 class="text-muted" id="resultStatus">Found {{ molecules|length }} result(s)</h4>
+            {% if status is defined %}
+                {% if status <= 0 %}
+                    <h3 class="text-center" id="resultMessage">{{ message }}</h3>
+                {% else %}
+                    <h3 class="text-center" id="resultMessage">Found {{ docs|length }} result(s)</h3>
+                    {% if docs|length > 0 %}
                     <div class="ul-card">
-                        {% for x in molecules %}
-                            <a href="/browse/{{ x['formula'] }}" class="no-style-link">
+                        {% for x in docs %}
+                            <a href="/view/{{ x['_id'] }}" class="no-style-link">
                             <div class="li-card">
-                                <span class="text-muted right">
-                                {{ x["parsed_files"]|length }} result(s)
-                                </span>
-                                {{ disp_formula(a=x["formula"].split()) }}
+                                {% if "formula_string" in x %}
+                                    <div class="card-text">
+                                    <span class="card-text-title">Formula :</span>
+                                    <span class="card-text-desc">{{ disp_formula(a=x["formula_string"].split()) }}</span>
+                                    </div>
+                                {% endif %}
+                                {% if "metadata" in x["attributes"] %}
+                                    {% for k in x["attributes"]["metadata"] %}
+                                        <div class="card-text">
+                                        <span class="card-text-title">{{ k }} :</span>
+                                        <span class="card-text-desc">{{ x["attributes"]["metadata"][k] }}</span>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
                             </a>
                         {% endfor %}
                     </div>
-                {% else %}
-                    <h4 class="text-muted" id="resultStatus">{{ message }}</h4>
+                    {% endif %}
                 {% endif %}
-            </div>
-            </div>
             {% endif %}
         </div>
     </div>

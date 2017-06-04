@@ -19,17 +19,6 @@
 
 
 
-{% macro disp_formula(a) -%}
-    {% for i in range(0, a|length, 2) -%}
-    {{- a[i] -}}
-    {%- if a[i+1] != '1' -%}
-        <sub>{{ a[i+1] -}}</sub>
-    {%- endif -%}
-    {%- endfor %}
-{%- endmacro %}
-
-
-
 {# Body content #}
 {% block body %}
 
@@ -75,14 +64,13 @@
         {% else %}
         {% for x in docs %}
             <a href="/view/{{ x['_id'] }}" class="no-style-link">
-            <div class="li-card">
                 {% if "metadata" in x["attributes"] %}
-                {% for k in x["attributes"]["metadata"] %}
-                    <div class="card-text">
-                    <span class="card-text-title">{{ k }} :</span>
-                    <span class="card-text-desc">{{ x["attributes"]["metadata"][k] }}</span>
-                    </div>
-                {% endfor %}
+                    {% for k in x["attributes"]["metadata"] %}
+                        <div class="card-text">
+                        <span class="card-text-title">{{ k }} :</span>
+                        <span class="card-text-desc">{{ x["attributes"]["metadata"][k] }}</span>
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </div>
             </a>

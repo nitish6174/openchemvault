@@ -6,7 +6,7 @@ from bson import ObjectId
 from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
 from flaskapp.process.chem_process import XYZ_data
-import flaskapp.process.formula_util as util
+from flaskapp.process.search_filter import apply_search_filter
 
 
 # Home page
@@ -65,40 +65,53 @@ def search_page():
 
 
 # Search results
-@routes_module.route("/search/type=<search_type>:query=<query>", methods=["GET"])
-def search_results_page(search_type, query):
+@routes_module.route("/search/<search_params>", methods=["GET"])
+def search_results_page(search_params):
     if request.method == "GET":
-        allowed_search_types = ["formula"]
-        if search_type in allowed_search_types:
-            query = urllib.parse.unquote(query)
-            q_formula_d = util.formula_query_parsing(query)
-            if q_formula_d is not None:
-                elems, counts = util.formula_dict_to_array(q_formula_d)
-                db = var.mongo.db
-                mol_docs = db.molecule.find({"elements": {"$all": elems}})
-                if mol_docs.count() > 0:
-                    mol_docs = [x for x in mol_docs]
-                    for x in mol_docs:
-                        x_formula_d = util.formula_array_to_dict(x["elements"],
-                                                                 x["element_counts"])
-                        x["dist"] = util.formula_distance(q_formula_d, x_formula_d)
-                    mol_docs.sort(key=lambda x: x["dist"])
-                    return render_template("search.html",
-                                           search_status=1,
-                                           query=query,
-                                           search_type=search_type,
-                                           molecules=mol_docs)
-                else:
-                    message = "No results found for this query"
-            else:
-                message = "Invalid formula"
+        try:
+            param_list = search_params.split(":")
+            search_key_val = [x.split("=") for x in param_list]
+            search_keys = [x[0] for x in search_key_val]
+            for x in search_key_val:
+                x[1] = urllib.parse.unquote(x[1])
+        except:
+            message = "Invalid search query"
+            return render_template("search.html",
+                                   status=-1,
+                                   message=message)
+        # This list is defined in search.html and search.js also
+        allowed_search_keys = [
+            "formula"
+        ]
+        if not set(search_keys) <= set(allowed_search_keys):
+            unsupported_keys = set(search_keys) - set(allowed_search_keys)
+            unsupported_keys = ", ".join(unsupported_keys)
+            d = {
+                "status": 0,
+                "message": "Unsupported search type : " + unsupported_keys
+            }
         else:
-            message = "Invalid search type"
-        return render_template("search.html",
-                               search_status=0,
-                               query=query,
-                               search_type=search_type,
-                               message=message)
+            db = var.mongo.db
+            docs = list(db.parsed_file.find({}))
+            for x in search_key_val:
+                docs = apply_search_filter(docs, x[0], x[1])
+                if docs is None:
+                    invalid_key = x[0]
+                    break
+            if docs is None:
+                d = {
+                    "status": 0,
+                    "message": "Invalid value given for : " + invalid_key
+                }
+            else:
+                d = {
+                    "status": 1,
+                    "docs": docs
+                }
+            d["params"] = {}
+            for x in search_key_val:
+                d["params"][x[0]] = x[1]
+        return render_template("search.html", **d)
 
 
 # Upload a log file and view parsed info from it

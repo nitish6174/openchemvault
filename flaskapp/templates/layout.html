@@ -41,32 +41,36 @@
     {% block head %}{% endblock %}
 </head>
 
+{# Function to display molecular formula #}
+{% macro disp_formula(a) -%}
+    {% for i in range(0, a|length, 2) -%}
+    {{- a[i] -}}
+    {%- if a[i+1] != '1' -%}
+        <sub>{{ a[i+1] -}}</sub>
+    {%- endif -%}
+    {%- endfor %}
+{%- endmacro %}
+
 {# Body tag #}
 <body>
-
     {# Include navbar #}
     {% if nav_bar != False %}
         {% include 'navbar.html' %}
     {% endif %}
-
     {# Include body content #}
     {% block body %}{% endblock %}
-
     {# Common JS file #}
     {% assets "common_js" %}
     <script type="text/javascript" src="{{ ASSET_URL }}"></script>
     {% endassets %}
-
     {# Include more page specific scripts or use to pass jinja variables to js #}
     {% block scripts %}{% endblock %}
-
     {# Page wise JS file #}
     {% if assets_js != False %}
         {% assets assets_js %}
         <script type="text/javascript" src="{{ ASSET_URL }}"></script>
         {% endassets %}
     {% endif %}
-
 </body>
 
 </html>

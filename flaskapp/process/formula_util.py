@@ -1,3 +1,6 @@
+from cclib.parser.utils import PeriodicTable
+
+
 def formula_query_parsing(query):
     query = query.replace(" ", "")
     if query.isalnum() and query[0].isupper():
@@ -50,3 +53,26 @@ def formula_distance(query_formula, data_record_formula):
         else:
             dist += abs(data_record_formula[k] - query_formula[k])
     return dist
+
+
+def make_formula_string(elems, elem_counts=[]):
+    periodic_obj = PeriodicTable()
+    formula_arr = []
+    if type(elems) is dict:
+        for x in elems:
+            formula_arr.append({
+                "atomno": periodic_obj.number[x],
+                "symbol": x,
+                "count": elems[x]
+            })
+    else:
+        for (x, y) in zip(elems, elem_counts):
+            formula_arr.append({
+                "atomno": periodic_obj.number[x],
+                "symbol": x,
+                "count": y
+            })
+    formula_arr.sort(key=lambda x: x["atomno"])
+    formula_arr = [x["symbol"] + " " + str(x["count"]) for x in formula_arr]
+    formula_string = " ".join(formula_arr)
+    return formula_string
