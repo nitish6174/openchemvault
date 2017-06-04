@@ -13,7 +13,7 @@
 
 {# Head block #}
 {% block head %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/css/bootstrap-slider.min.css">
 {% endblock %}
 
 
@@ -28,19 +28,54 @@
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
             <form class="form-horizontal" id="searchForm">
-                {# This list is defined in view_routes.py and search.js also #}
-                {% set search_fields = {
-                    "formula": ""
-                } %}
-                {% for x in params %}
-                    {% set _temp = search_fields.update({x: params[x]}) %}
-                {% endfor %}
-                <div class="form-group">
-                    <label for="search-formula-input" class="col-sm-3 control-label">Molecular formula</label>
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" name="search-formula-input" value="{{ search_fields['formula'] }}">
+                {# This list is also defined in setup_db.py, view_routes.py #}
+                {% set search_fields = [
+                    {"key": "formula"     , "range": 0, "value": "", "title": "Molecular formula"},
+                    {"key": "package"     , "range": 0, "value": "", "title": "Package"},
+                    {"key": "natom"       , "range": 1, "value": "", "title": "No of atoms" , "int": 1},
+                    {"key": "charge"      , "range": 1, "value": "", "title": "Charge"      , "int": 1},
+                    {"key": "enthalpy"    , "range": 1, "value": "", "title": "Enthalpy"    , "int": 0},
+                    {"key": "entropy"     , "range": 1, "value": "", "title": "Entropy"     , "int": 0},
+                    {"key": "freeenergy"  , "range": 1, "value": "", "title": "Free energy" , "int": 0},
+                    {"key": "mult"        , "range": 1, "value": "", "title": "Mult"        , "int": 1},
+                    {"key": "nbasis"      , "range": 1, "value": "", "title": "nbasis"      , "int": 1},
+                    {"key": "nmo"         , "range": 1, "value": "", "title": "nmo"         , "int": 1},
+                    {"key": "temperature" , "range": 1, "value": "", "title": "Temperature" , "int": 0}
+                ] %}
+                {% for x in search_fields %}
+                    {% set k = x["key"] %}
+                    {% if k in params %}
+                        {% set _temp = x.update({'value': params[k]}) %}
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="search-{{ k }}-input" class="col-sm-3 control-label">{{ x["title"] }}</label>
+                        <div class="col-sm-9">
+                        {% if x["range"] == 0 %}
+                            <input type="text" class="form-control" name="search-{{ k }}-input" value="{{ x['value'] }}">
+                        {% else %}
+                            {% set min = stats[k]["min"] %}
+                            {% set max = stats[k]["max"] %}
+                            {% if x["int"] == 1 %}
+                                {% if min == max %}
+                                    {% set min = min - 1 %}
+                                    {% set max = max + 1 %}
+                                {% endif %}
+                                {% set step = 1 %}
+                            {% else %}
+                                {% if min == max %}
+                                    {% set min = 0.999 * min %}
+                                    {% set max = 1.001 * max %}
+                                {% endif %}
+                                {% set step = ((max-min)/100.0)|round(5) %}
+                            {% endif %}
+                            {% if x["value"] == "" %}
+                                {% set _temp = x.update({'value': (min|string)+","+(max|string)}) %}
+                            {% endif %}
+                            <input type="text" class="form-control span2" name="search-{{ k }}-input" value="" data-slider-min="{{ min }}" data-slider-max="{{ max }}" data-slider-step="{{ step }}" data-slider-value="[{{ x['value'] }}]"/>
+                        {% endif %}
+                        </div>
                     </div>
-                </div>
+                {% endfor %}
                 <div class="form-group">
                     <div class="col-sm-9 col-sm-offset-3">
                         <input type="submit" class="btn btn-success btn-block" id="querySubmit">
@@ -98,5 +133,5 @@
 
 {# Scripts block #}
 {% block scripts %}
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/9.8.0/bootstrap-slider.min.js"></script>
 {% endblock %}

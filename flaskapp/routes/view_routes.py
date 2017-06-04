@@ -7,6 +7,7 @@ from flaskapp.routes import routes_module
 import flaskapp.shared_variables as var
 from flaskapp.process.chem_process import XYZ_data
 from flaskapp.process.search_filter import apply_search_filter
+from flaskapp.process.db_process import get_attribute_stats
 
 
 # Home page
@@ -61,13 +62,15 @@ def view_file_page(doc_id):
 @routes_module.route("/search", methods=["GET"])
 def search_page():
     if request.method == "GET":
-        return render_template("search.html")
+        stats = get_attribute_stats(True)
+        return render_template("search.html", stats=stats)
 
 
 # Search results
 @routes_module.route("/search/<search_params>", methods=["GET"])
 def search_results_page(search_params):
     if request.method == "GET":
+        stats = get_attribute_stats(True)
         try:
             param_list = search_params.split(":")
             search_key_val = [x.split("=") for x in param_list]
@@ -77,11 +80,22 @@ def search_results_page(search_params):
         except:
             message = "Invalid search query"
             return render_template("search.html",
+                                   stats=stats,
                                    status=-1,
                                    message=message)
-        # This list is defined in search.html and search.js also
+        # This list is also defined in setup_db.py, search.html
         allowed_search_keys = [
-            "formula"
+            "charge",
+            "enthalpy",
+            "entropy",
+            "formula",
+            "freeenergy",
+            "mult",
+            "natom",
+            "nbasis",
+            "nmo",
+            "package",
+            "temperature"
         ]
         if not set(search_keys) <= set(allowed_search_keys):
             unsupported_keys = set(search_keys) - set(allowed_search_keys)
@@ -111,6 +125,7 @@ def search_results_page(search_params):
             d["params"] = {}
             for x in search_key_val:
                 d["params"][x[0]] = x[1]
+        d["stats"] = stats
         return render_template("search.html", **d)
 
 
