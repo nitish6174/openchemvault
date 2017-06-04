@@ -58,11 +58,43 @@ def main():
                     print("-" * 50)
             else:
                 print("This folder was not found")
+            find_stats_value(db)
         except Exception as e:
             print("\nCannot setup database")
             print("-" * 50)
             print(e.message)
             print("-" * 50)
+
+
+# Find min and max value for each applicable attribute
+def find_stats_value(db):
+    try:
+        db.stats.delete_many({})
+        # This list is also defined in view_routes.py, search.html
+        attributes = {
+            "charge"      : {"min": 0, "max": 0},
+            "enthalpy"    : {"min": 0, "max": 0},
+            "entropy"     : {"min": 0, "max": 0},
+            "freeenergy"  : {"min": 0, "max": 0},
+            "mult"        : {"min": 0, "max": 0},
+            "natom"       : {"min": 0, "max": 0},
+            "nbasis"      : {"min": 0, "max": 0},
+            "nmo"         : {"min": 0, "max": 0},
+            "temperature" : {"min": 0, "max": 0}
+        }
+        for x in attributes:
+            key = "attributes." + x
+            doc = db.parsed_file.find(
+                {key: {"$exists": True}}, {key: 1}
+            ).sort(key, 1).limit(1)
+            attributes[x]["min"] = (list(doc))[0]["attributes"][x]
+            doc = db.parsed_file.find(
+                {key: {"$exists": True}}, {key: 1}
+            ).sort(key, -1).limit(1)
+            attributes[x]["max"] = (list(doc))[0]["attributes"][x]
+        db.stats.insert_one(attributes)
+    except:
+        pass
 
 
 # Recursively iterate through files in a directory
