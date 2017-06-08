@@ -71,15 +71,13 @@
                             {% if x["value"] == "" %}
                                 {% set _temp = x.update({'value': (min|string)+","+(max|string)}) %}
                             {% endif %}
-                            <input type="text" class="form-control span2" name="search-{{ k }}-input" value="" data-slider-min="{{ min }}" data-slider-max="{{ max }}" data-slider-step="{{ step }}" data-slider-value="[{{ x['value'] }}]"/>
+                            <input type="text" class="span2" name="search-{{ k }}-input" value="" data-slider-min="{{ min }}" data-slider-max="{{ max }}" data-slider-step="{{ step }}" data-slider-value="[{{ x['value'] }}]"/>
                         {% endif %}
                         </div>
                     </div>
                 {% endfor %}
                 <div class="form-group">
-                    <div class="col-sm-9 col-sm-offset-3">
-                        <input type="submit" class="btn btn-success btn-block" id="querySubmit">
-                    </div>
+                    <input type="submit" class="btn btn-success btn-block" id="querySubmit">
                 </div>
             </form>
         </div>

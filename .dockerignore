@@ -5,6 +5,9 @@ data/
 # Uploaded files
 flaskapp/uploads/
 
+# SVG files
+flaskapp/static/svg/
+
 # Cached files
 *.pyc
 __pycache__/

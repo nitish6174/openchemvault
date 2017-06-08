@@ -4,7 +4,9 @@ import sys
 import json
 
 from pymongo import MongoClient
-import cclib
+from cclib.bridge.cclib2openbabel import makeopenbabel
+import openbabel as ob
+import numpy as np
 
 import flaskapp.config as config
 from flaskapp.process.chem_process import parse_file
@@ -59,6 +61,7 @@ def main():
             else:
                 print("This folder was not found")
             find_stats_value(db)
+            generate_svgs(db)
         except Exception as e:
             print("\nCannot setup database")
             print("-" * 50)
@@ -97,6 +100,39 @@ def find_stats_value(db):
         pass
 
 
+# Generate SVG file for each inserted document
+def generate_svgs(db):
+    try:
+        docs = db.parsed_file.find({})
+    except:
+        return
+    if docs.count() > 0:
+        dir_path = "flaskapp/static/svg/"
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+        for x in docs:
+            try:
+                params = {
+                    "atomcoords": np.asarray(x["attributes"]["atomcoords"]),
+                    "atomnos": np.asarray(x["attributes"]["atomnos"]),
+                    "charge": x["attributes"]["charge"],
+                    "mult": x["attributes"]["mult"]
+                }
+            except:
+                continue
+            try:
+                # Save the SVG file with filename same as mongodb document id
+                file_path = dir_path + str(x["_id"]) + ".svg"
+                print("Creating SVG : " + file_path)
+                mol = makeopenbabel(**params)
+                obconversion = ob.OBConversion()
+                obconversion.SetOutFormat("svg")
+                ob.obErrorLog.StopLogging()
+                obconversion.WriteFile(mol, file_path)
+            except:
+                continue
+
+
 # Recursively iterate through files in a directory
 def iterate(dir_path, db, insert_mode=0):
     if not(dir_path.endswith("/")):
@@ -121,17 +157,18 @@ def add_file_to_database(file_path, db, insert_mode=0):
             success_count += 1
             print("  Done!")
             if insert_mode == 1:
-                insert_data(res["attributes"], db)
+                insert_data(file_path, db, res["attributes"])
     else:
         print("  Failed: Unable to parse the file")
 
 
 # Insert given parsed data in database
-def insert_data(data, db):
+def insert_data(file_path, db, data):
     formula = data["formula_string"]
     data = {
         "attributes": data,
-        "formula_string": formula
+        "formula_string": formula,
+        "file_path": file_path
     }
     data["attributes"].pop("formula_string", None)
     res = db.molecule.find_one({"formula": formula}, {"_id": 1})
@@ -176,7 +213,3 @@ def distance(p1, p2):
     for i in range(3):
         sq_sum += (p1[i] - p2[i])**2
     return math.sqrt(sq_sum)
-
-
-if __name__ == '__main__':
-    main()
