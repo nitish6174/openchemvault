@@ -150,14 +150,14 @@ def add_file_to_database(file_path, db, insert_mode=0):
     print("Processing file : ", file_path, ". . . ", end="")
     res = parse_file(file_path)
     if res["success"]:
-        if "formula_string" not in res["attributes"]:
+        if "formula_string" not in res:
             print("  Failed: Unable to determine molecular formula")
         else:
             global success_count
             success_count += 1
             print("  Done!")
             if insert_mode == 1:
-                insert_data(file_path, db, res["attributes"])
+                insert_data(file_path, db, res)
     else:
         print("  Failed: Unable to parse the file")
 
@@ -165,26 +165,28 @@ def add_file_to_database(file_path, db, insert_mode=0):
 # Insert given parsed data in database
 def insert_data(file_path, db, data):
     formula = data["formula_string"]
-    data = {
-        "attributes": data,
+    new_parsed_file_doc = {
+        "attributes": data["attributes"],
         "formula_string": formula,
+        "formula_dict": data["formula"],
         "file_path": file_path
     }
-    data["attributes"].pop("formula_string", None)
+    if "InChI" in data:
+        new_parsed_file_doc["InChI"] = data["InChI"]
     res = db.molecule.find_one({"formula": formula}, {"_id": 1})
     try:
         if res is None:
             temp = formula.split()
             elems = [temp[i] for i in range(len(temp)) if i%2==0]
             elem_counts = [temp[i] for i in range(len(temp)) if i%2==1]
-            doc = {
+            new_molecule_doc = {
                 "formula": formula,
                 "elements": elems,
                 "element_counts": elem_counts,
                 "parsed_files": []
             }
-            db.molecule.insert_one(doc)
-        res = db.parsed_file.insert_one(data)
+            db.molecule.insert_one(new_molecule_doc)
+        res = db.parsed_file.insert_one(new_parsed_file_doc)
         db.molecule.update_one({"formula": formula},
                                {"$push": {"parsed_files": res.inserted_id}})
     except Exception as e:

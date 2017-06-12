@@ -1,3 +1,5 @@
+import numpy as np
+
 from cclib.parser.utils import PeriodicTable
 from cclib.io import ccopen, ccread
 from cclib.bridge.cclib2openbabel import makeopenbabel
@@ -33,7 +35,7 @@ def parse_file(file_path):
     else:
         res = {"success": False}
     if res["success"]:
-        make_chemical_formula(res["attributes"])
+        make_chemical_formula(res)
         res["xyz_data"] = XYZ_data(res["attributes"])
     return res
 
@@ -42,7 +44,7 @@ def make_chemical_formula(d):
     periodic_obj = PeriodicTable()
     try:
         atom_dict = {}
-        for x in d["atomnos"]:
+        for x in d["attributes"]["atomnos"]:
             if x in atom_dict:
                 atom_dict[x] += 1
             else:
@@ -80,15 +82,18 @@ def XYZ_data(d):
 def get_InChI(attr):
     try:
         params = {
-            "atomcoords": getattr(attr, "atomcoords"),
-            "atomnos": getattr(attr, "atomnos"),
-            "charge": getattr(attr, "charge"),
-            "mult": getattr(attr, "mult")
+            "atomcoords": np.asarray(attr["atomcoords"]),
+            "atomnos": attr["atomnos"],
+            "charge": attr["charge"],
+            "mult": attr["mult"]
         }
         mol = makeopenbabel(**params)
         obconversion = ob.OBConversion()
         obconversion.SetOutFormat("inchi")
         ob.obErrorLog.StopLogging()
-        return obconversion.WriteString(mol).strip()
+        inchi = obconversion.WriteString(mol).strip()
+        if inchi.startswith("InChI="):
+            inchi = inchi.replace("InChI=", "")
+        return inchi
     except:
         return None
