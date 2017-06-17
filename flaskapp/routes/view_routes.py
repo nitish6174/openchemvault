@@ -20,7 +20,8 @@ def home_page():
 @routes_module.route("/browse", methods=["GET"])
 def browse_home_page():
     if request.method == "GET":
-        mols = var.mongo.db.molecule.find({}).sort("formula")
+        db = var.mongo.db
+        mols = db.molecule.find({}).sort("formula")
         return render_template("browse.html", mode="home", mols=mols)
 
 
