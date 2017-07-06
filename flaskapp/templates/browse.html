@@ -64,6 +64,7 @@
         {% else %}
         {% for x in docs %}
             <a href="/view/{{ x['_id'] }}" class="no-style-link">
+            <div class="li-card">
                 {% if "metadata" in x["attributes"] %}
                     {% for k in x["attributes"]["metadata"] %}
                         <div class="card-text">

@@ -3,10 +3,11 @@ import json
 import urllib.parse
 
 from flask import request, jsonify
+from bson import ObjectId
 
 from flaskapp.routes import routes_module
 from flaskapp.process.file_handle import make_new_file_name
-from flaskapp.process.chem_process import parse_file
+from flaskapp.process.chem_process import parse_file, XYZ_data
 from flaskapp.process.json_util import jsonify_mongo, show
 import flaskapp.shared_variables as var
 
@@ -44,7 +45,7 @@ def browse_home_api():
             d = {
                 "success": 0,
                 "results": [],
-                "message": e.args
+                "message": type(e).__name__ + ":" + str(e)
             }
         return jsonify(d)
 
@@ -60,9 +61,9 @@ def browse_molecule_api(formula):
                 "success": 0,
                 "formula": "",
                 "results": [],
-                "message": e.args
+                "message": type(e).__name__ + ":" + str(e)
             }
-            return d
+            return jsonify(d)
         try:
             db = var.mongo.db
             mol_doc = db.molecule.find_one({"formula": formula})
@@ -71,9 +72,9 @@ def browse_molecule_api(formula):
                 "success": 0,
                 "formula": formula,
                 "results": [],
-                "message": e.args
+                "message": type(e).__name__ + ":" + str(e)
             }
-            return d
+            return jsonify(d)
         docs = []
         try:
             if mol_doc is not None:
@@ -91,6 +92,46 @@ def browse_molecule_api(formula):
                 "success": 0,
                 "formula": formula,
                 "results": [],
-                "message": e.args
+                "message": type(e).__name__ + ":" + str(e)
             }
-            return d
+            return jsonify(d)
+
+
+# Get data of a particular parsed file
+@routes_module.route("/api/file/<doc_id>", methods=["POST"])
+def get_file_api(doc_id):
+    if request.method == "POST":
+        try:
+            db = var.mongo.db
+            doc = db.parsed_file.find_one({"_id": ObjectId(doc_id)})
+        except Exception as e:
+            d = {
+                "success": 0,
+                "message": type(e).__name__ + ":" + str(e)
+            }
+            if type(e).__name__ == 'InvalidId':
+                d["message"] = "Invalid Id"
+            return jsonify(d)
+        if doc is not None:
+            try:
+                xyz_data = XYZ_data(doc["attributes"])
+                if xyz_data != "":
+                    doc["xyz_data"] = xyz_data
+                doc = jsonify_mongo(doc)
+                d = {
+                    "success": 1,
+                    "file": doc
+                }
+                return jsonify(d)
+            except Exception as e:
+                d = {
+                    "success": 0,
+                    "message": type(e).__name__ + ":" + str(e)
+                }
+                return jsonify(d)
+        else:
+            d = {
+                "success": 0,
+                "message": "This record does not exist"
+            }
+            return jsonify(d)
