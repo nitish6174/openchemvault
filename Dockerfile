@@ -31,13 +31,13 @@ RUN mkdir /openbabel && \
     mkdir /openbabel/build
 RUN mkdir /app
 WORKDIR /openbabel/build
-RUN cmake /openbabel/openbabel-openbabel-2-4-1 -DRUN_SWIG=ON -DPYTHON_BINDINGS=ON && \
+RUN cmake /openbabel/openbabel-openbabel-2-4-1 -DPYTHON_BINDINGS=ON && \
     make && \
     make install
 # Install pip dependencies
 COPY ./requirements.txt /pip/
 RUN pip3 install -r /pip/requirements.txt
-# Goto source directory
+# Copy source directory
 COPY . /app
 # Goto flaskapp directory to copy config file
 WORKDIR /app/flaskapp
