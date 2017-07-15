@@ -1,5 +1,6 @@
 import os
 import json
+import simplejson
 import urllib.parse
 
 from flask import request, jsonify
@@ -18,120 +19,149 @@ dir_path = "flaskapp/uploads/"
 # Upload a log file and view parsed info from it
 @routes_module.route("/api/upload", methods=["POST"])
 def upload_file_api():
-    if request.method == "POST":
-        f = request.files["file"]
-        if not os.path.exists(dir_path):
-            os.mkdir(dir_path)
-        new_log_file_name = make_new_file_name()
-        f.save(new_log_file_name)
-        d = parse_file(new_log_file_name)
-        os.remove(new_log_file_name)
-        return json.dumps(d, sort_keys=True)
+    f = request.files["file"]
+    if not os.path.exists(dir_path):
+        os.mkdir(dir_path)
+    new_log_file_name = make_new_file_name()
+    f.save(new_log_file_name)
+    d = parse_file(new_log_file_name)
+    os.remove(new_log_file_name)
+    return json.dumps(d, sort_keys=True)
 
 
 # List molecules in database
-@routes_module.route("/api/browse", methods=["POST"])
-def browse_home_api():
-    if request.method == "POST":
-        try:
-            db = var.mongo.db
-            mols = db.molecule.find({}).sort("formula")
-            mols = jsonify_mongo(list(mols))
-            d = {
-                "success": 1,
-                "results": mols
-            }
-        except Exception as e:
-            d = {
-                "success": 0,
-                "results": [],
-                "message": type(e).__name__ + ":" + str(e)
-            }
-        return jsonify(d)
+@routes_module.route("/api/browse/molecules", methods=["GET", "POST"])
+def browse_mols_api():
+    try:
+        db = var.mongo.db
+        mols = db.molecule.find({}).sort("formula")
+        mols = jsonify_mongo(list(mols))
+        d = {
+            "success": 1,
+            "results": mols
+        }
+    except Exception as e:
+        d = {
+            "success": 0,
+            "results": [],
+            "message": type(e).__name__ + ":" + str(e)
+        }
+    return api_jsonify(d)
+
+
+# List parsed files in database
+@routes_module.route("/api/browse/files", methods=["GET", "POST"])
+def browse_docs_api():
+    try:
+        db = var.mongo.db
+        docs = db.parsed_file.find({})
+        docs = jsonify_mongo(list(docs))
+        d = {
+            "success": 1,
+            "results": docs
+        }
+    except Exception as e:
+        d = {
+            "success": 0,
+            "results": [],
+            "message": type(e).__name__ + ":" + str(e)
+        }
+    return api_jsonify(d)
 
 
 # List files for a molecule in database
-@routes_module.route("/api/browse/<formula>", methods=["POST"])
+@routes_module.route("/api/browse/<formula>", methods=["GET", "POST"])
 def browse_molecule_api(formula):
-    if request.method == "POST":
-        try:
-            formula = urllib.parse.unquote(formula)
-        except Exception as e:
+    try:
+        formula = urllib.parse.unquote(formula)
+    except Exception as e:
+        d = {
+            "success": 0,
+            "formula": "",
+            "results": [],
+            "message": type(e).__name__ + ":" + str(e)
+        }
+        return api_jsonify(d)
+    try:
+        db = var.mongo.db
+        mol_doc = db.molecule.find_one({"formula": formula})
+    except Exception as e:
+        d = {
+            "success": 0,
+            "formula": formula,
+            "results": [],
+            "message": type(e).__name__ + ":" + str(e)
+        }
+        return api_jsonify(d)
+    docs = []
+    try:
+        if mol_doc is not None:
+            ids = mol_doc["parsed_files"]
+            docs = db.parsed_file.find({"_id": {"$in": ids}})
+            docs = jsonify_mongo(list(docs))
             d = {
-                "success": 0,
-                "formula": "",
-                "results": [],
-                "message": type(e).__name__ + ":" + str(e)
+                "success": 1,
+                "formula": formula,
+                "results": docs
             }
-            return jsonify(d)
-        try:
-            db = var.mongo.db
-            mol_doc = db.molecule.find_one({"formula": formula})
-        except Exception as e:
+            return api_jsonify(d)
+        else:
             d = {
-                "success": 0,
+                "success": 1,
                 "formula": formula,
                 "results": [],
-                "message": type(e).__name__ + ":" + str(e)
+                "message": "No file corresponds to this formula"
             }
-            return jsonify(d)
-        docs = []
-        try:
-            if mol_doc is not None:
-                ids = mol_doc["parsed_files"]
-                docs = db.parsed_file.find({"_id": {"$in": ids}})
-                docs = jsonify_mongo(list(docs))
-                d = {
-                    "success": 1,
-                    "formula": formula,
-                    "results": docs
-                }
-                return jsonify(d)
-        except Exception as e:
-            d = {
-                "success": 0,
-                "formula": formula,
-                "results": [],
-                "message": type(e).__name__ + ":" + str(e)
-            }
-            return jsonify(d)
+            return api_jsonify(d)
+    except Exception as e:
+        d = {
+            "success": 0,
+            "formula": formula,
+            "results": [],
+            "message": type(e).__name__ + ":" + str(e)
+        }
+        return api_jsonify(d)
 
 
 # Get data of a particular parsed file
-@routes_module.route("/api/file/<doc_id>", methods=["POST"])
+@routes_module.route("/api/file/<doc_id>", methods=["GET", "POST"])
 def get_file_api(doc_id):
-    if request.method == "POST":
+    try:
+        db = var.mongo.db
+        doc = db.parsed_file.find_one({"_id": ObjectId(doc_id)})
+    except Exception as e:
+        d = {
+            "success": 0,
+            "message": type(e).__name__ + ":" + str(e)
+        }
+        if type(e).__name__ == 'InvalidId':
+            d["message"] = "Invalid Id"
+        return api_jsonify(d)
+    if doc is not None:
         try:
-            db = var.mongo.db
-            doc = db.parsed_file.find_one({"_id": ObjectId(doc_id)})
+            xyz_data = XYZ_data(doc["attributes"])
+            if xyz_data != "":
+                doc["xyz_data"] = xyz_data
+            doc = jsonify_mongo(doc)
+            d = {
+                "success": 1,
+                "file": doc
+            }
+            return api_jsonify(d)
         except Exception as e:
             d = {
                 "success": 0,
                 "message": type(e).__name__ + ":" + str(e)
             }
-            if type(e).__name__ == 'InvalidId':
-                d["message"] = "Invalid Id"
-            return jsonify(d)
-        if doc is not None:
-            try:
-                xyz_data = XYZ_data(doc["attributes"])
-                if xyz_data != "":
-                    doc["xyz_data"] = xyz_data
-                doc = jsonify_mongo(doc)
-                d = {
-                    "success": 1,
-                    "file": doc
-                }
-                return jsonify(d)
-            except Exception as e:
-                d = {
-                    "success": 0,
-                    "message": type(e).__name__ + ":" + str(e)
-                }
-                return jsonify(d)
-        else:
-            d = {
-                "success": 0,
-                "message": "This record does not exist"
-            }
-            return jsonify(d)
+            return api_jsonify(d)
+    else:
+        d = {
+            "success": 0,
+            "message": "This record does not exist"
+        }
+        return api_jsonify(d)
+
+
+# Handle NaN -> null conversion and return "application/json" object
+def api_jsonify(d):
+    return jsonify(json.loads(simplejson.dumps(d, ignore_nan=True)))
