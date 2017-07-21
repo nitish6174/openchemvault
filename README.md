@@ -7,26 +7,24 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
 
 ### With Docker
 
-* Install Docker on your machine  
+* Install Docker and docker-compose on your machine  
 * Clone this repository  
   ```bash
   git clone https://github.com/nitish6174/cclib-web
   ```
-* Build the Dockerfile  
+* Setup the docker environment file
   ```bash
-  sudo docker build -t cclib-web:latest .
-  ```  
-* Run the built docker image while providing the directory of log files
-  on host machine to mount it in docker container  
+  cp .env.example .env
+  ```
+  Set ```SETUP_DB``` as ```1``` to seed database with parsed files else set ```0```  
+  ```DATA_FOLDER_PATH``` is the local path to the directory of log files which will be parsed and inserted in dockerized image's database if ```SETUP_DB``` is ```1```  
+  Setting ```PRODUCTION``` to ```0``` runs flaskapp in ```debug``` mode
+* Build the Docker setup and run it 
   ```bash
-  sudo docker run -e "LD_LIBRARY_PATH=/usr/local/lib:/usr/lib:/lib" -it -p 5000:5000 -v <log_files_dir>:/data/ cclib-web
+  sudo docker-compose build
+  sudo docker-compose up
   ```  
-* To seed database, enter ```y``` when the image runs (currently not working in docker)  
-  Provide the data folder path as /data/ or a sub-directory of /data/  
 * The flask application can now be accessed in browser at ```localhost:5000```
-* To stop the docker container running this application,
-  first find the container id by ```sudo docker ps -a```
-  and then use ```sudo docker stop <CONTAINER ID>``` to stop it.
 
 
 ### Using python virtual environment
@@ -64,11 +62,14 @@ Below instructions are given for ubuntu
   python3 setup.py install
   ```  
 * Running :  
-  - Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
+  * Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
     (Run ```source venv_py3/bin/activate``` to enter virtual environment)
-  * Goto ```flaskapp``` directory and run ```python3 app.py```  
-  * To seed database, provide the data folder and other asked options.  
-    Then, flask server will start on the machine at port 5000.  
+  * Run ```python run.py <SETUP_DB> <PRODUCTION> <DATA_FOLDER_PATH>``` with suitable arguments:  
+    - ```SETUP_DB``` : Set as ```1``` to seed database with parsed files else set ```0```  
+    - ```PRODUCTION``` : Setting to ```0``` runs flaskapp in ```debug``` mode  
+    - ```DATA_FOLDER_PATH``` : Path to the directory containing log files which will be parsed and inserted in host machine's MongoDB database (provided ```SETUP_DB``` is ```1```)  
+    **Note** : All the 3 arguments are optional
+  * Then, flask server will start on the machine at port 5000.  
   * The application can now be accessed in browser at ```localhost:5000```
   * Stop flask server with ```Ctrl-C``` and deactivate virtualenv using ```deactivate``` command
 

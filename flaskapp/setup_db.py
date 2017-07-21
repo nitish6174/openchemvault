@@ -27,46 +27,29 @@ insert_mode = 1
 # sys.stdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
 
 
-def main():
-    message = (
-        "\nThis script will seed mongodb database by parsing info from "
-        "computational chemistry output files\n"
-        "Ensure that :\n"
-        "1. You have mongodb setup on your/remote machine\n"
-        "2. Data files ( .out , .log etc) are present on your machine "
-        "in a read-accessible folder\n"
-    )
-    print(message)
-    choice1 = input("Proceed to setup database (N/y) : ")
-    if choice1 == "y" or choice1 == "Y":
-        try:
-            db_conn = MongoClient(db_host, int(db_port))
-            db = db_conn[db_name]
-            if db_user != "":
-                db.authenticate(db_user, db_pass)
-            message = "Path to folder containing data files : "
-            data_folder_path = input(message)
-            if data_folder_path == "":
-                data_folder_path = default_data_folder_path
-            if os.path.isdir(data_folder_path):
-                message = "\nContinue adding files in above folder " + \
-                          "to database (N/y) : "
-                choice2 = input(message)
-                if choice2 == "y" or choice2 == "Y":
-                    db.molecule.delete_many({})
-                    db.parsed_file.delete_many({})
-                    iterate(data_folder_path, db, insert_mode)
-                    print("\nDone!")
-                    print("-" * 50)
-            else:
-                print("This folder was not found")
-            find_stats_value(db)
-            generate_svgs(db)
-        except Exception as e:
-            print("\nCannot setup database")
+def main(data_folder_path):
+    try:
+        db_conn = MongoClient(db_host, int(db_port))
+        db = db_conn[db_name]
+        if db_user != "":
+            db.authenticate(db_user, db_pass)
+        if data_folder_path == "":
+            data_folder_path = default_data_folder_path
+        if os.path.isdir(data_folder_path):
+            db.molecule.delete_many({})
+            db.parsed_file.delete_many({})
+            iterate(data_folder_path, db, insert_mode)
+            print("\nDone!")
             print("-" * 50)
-            print(e.message)
-            print("-" * 50)
+        else:
+            print("This folder was not found")
+        find_stats_value(db)
+        generate_svgs(db)
+    except Exception as e:
+        print("\nCannot setup database")
+        print("-" * 50)
+        print(e.message)
+        print("-" * 50)
 
 
 # Find min and max value for each applicable attribute

@@ -20,6 +20,9 @@ venv/
 venv_py2/
 venv_py3/
 
+# Docker environment
+.env
+
 # Configuration file
 flaskapp/config.py
 

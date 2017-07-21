@@ -42,6 +42,4 @@ COPY . /app
 # Goto flaskapp directory to copy config file
 WORKDIR /app/flaskapp
 RUN cp config.py.example config.py
-# Start flask application
 WORKDIR /app
-CMD ["python3", "run.py"]
