@@ -41,5 +41,5 @@ RUN pip3 install -r /pip/requirements.txt
 COPY . /app
 # Goto flaskapp directory to copy config file
 WORKDIR /app/flaskapp
-RUN cp config.py.example config.py
+RUN cp config-docker.py config.py
 WORKDIR /app

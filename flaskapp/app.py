@@ -18,6 +18,8 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = config.static_file_max_age
 app.config['UPLOAD_FOLDER'] = "uploads/"
 
 # MongoDB
+app.config["MONGO_HOST"] = config.mongo_host
+app.config["MONGO_PORT"] = config.mongo_port
 app.config["MONGO_DBNAME"] = config.mongo_name
 var.mongo.init_app(app, config_prefix="MONGO")
 

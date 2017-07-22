@@ -17,10 +17,10 @@ db_port = config.mongo_port
 db_name = config.mongo_name
 db_user = config.mongo_user
 db_pass = config.mongo_pass
+
 # Data folder path
-default_data_folder_path = config.data_folder
-# Store count of processed files
-success_count = 0
+data_folder_path = config.data_folder
+
 # Modify database (1) or just loop through files and parse them (0)
 insert_mode = 1
 # Unbuffered output
@@ -33,9 +33,7 @@ def main(data_folder_path):
         db = db_conn[db_name]
         if db_user != "":
             db.authenticate(db_user, db_pass)
-        if data_folder_path == "":
-            data_folder_path = default_data_folder_path
-        if os.path.isdir(data_folder_path):
+        if data_folder_path != "" and os.path.isdir(data_folder_path):
             db.molecule.delete_many({})
             db.parsed_file.delete_many({})
             iterate(data_folder_path, db, insert_mode)
@@ -136,8 +134,6 @@ def add_file_to_database(file_path, db, insert_mode=0):
         if "formula_string" not in res:
             print("  Failed: Unable to determine molecular formula")
         else:
-            global success_count
-            success_count += 1
             print("  Done!")
             if insert_mode == 1:
                 insert_data(file_path, db, res)
