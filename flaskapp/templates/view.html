@@ -11,6 +11,15 @@
 
 
 
+{# List of attributes to be shown in basic details sheet #}
+{% set sheet_basic_attr = ["natom", "metadata"] %}
+{# List of attributes to be shown in atom-wise details sheet #}
+{% set sheet_atom_attr = ["atomnos", "atommasses", "atomcoords", "coreelectrons"] %}
+{# Depth of various parsed attributes #}
+{% set attr_depth = {"atomnos": 1, "atommasses": 1, "atomcoords": 2, "coreelectrons": 1} %}
+
+
+
 {# Head block #}
 {% block head %}
 
@@ -24,30 +33,99 @@
 <div class="container-fluid">
 
 {% if success == 0 %}
+
     <h3 class="text-center">This log file does not exist</h3>
+
 {% else %}
-    <div class="row">
-    <div class="col-md-6 col-sm-8 col-md-offset-3 col-sm-offset-2">
-    {% if "xyz_data" in doc %}
-        <div class="accordion-item">
-        <div class="accordion-title" onclick="$(this).next().next().slideToggle(100);">
-        <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> 3D model</h4></div>
-        <hr class="hr-no-gap">
-        <div class="accordion-text active">
-            <div class="mol-container" id="molBox"></div>
+
+    <div class="row" id="sheetBasic">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="row">
+        <div class="col-sm-6">
+            <h3 class="text-center"><strong>General information</strong></h3>
+            <br>
+            {% if "formula_string" in doc %}
+                <h4><strong>Formula : </strong>{{ disp_formula(a=doc["formula_string"].split()) }}</h4>
+            {% endif %}
+            {% if "InChI" in doc %}
+                <h4><strong>InChI : </strong>{{ doc["InChI"] }}</h4>
+            {% endif %}
+            {% if "natom" in doc["attributes"] %}
+                <h4><strong>No. of atoms : </strong>{{ doc["attributes"]["natom"] }}</h4>
+            {% endif %}
+            {% if "metadata" in doc["attributes"] %}
+                <h3 class="text-center"><strong>Metadata</strong></h3>
+                <br>
+                {% for k in doc["attributes"]["metadata"] %}
+                    <h4><strong>{{ k }} : </strong>{{ doc["attributes"]["metadata"][k] }}</h4>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-sm-6">
+            {% if "xyz_data" in doc %}
+                <div class="mol-container" id="molBox"></div>
+            {% endif %}
         </div>
         </div>
+    </div>
+    </div>
+
+    {% if "natom" in doc["attributes"] %}
+    <div class="row" id="sheetAtom">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="row">
+        <div class="col-xs-12">
+            <div class="accordion-item">
+            {{ accordian_header("Atom-wise attributes") }}
+            <div class="accordion-text">
+                <table class="table table-striped">
+                    <tr>
+                        <th>S. No.</th>
+                        {% for x in sheet_atom_attr %}
+                        {% if x in doc["attributes"] %}
+                            <th>{{ x }}</th>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% for i in range(doc["attributes"]["natom"]) %}
+                    <tr>
+                        <td>{{ i+1 }}</td>
+                        {% for x in sheet_atom_attr %}
+                        {% if x in doc["attributes"] %}
+                            {% if attr_depth[x] == 1 %}
+                                {% set value = doc["attributes"][x][i] %}
+                            {% elif attr_depth[x] == 2 %}
+                                {% set value = doc["attributes"][x][0][i] %}
+                            {% else %}
+                                {% set value = "N/A" %}
+                            {% endif %}
+                            <td>{{ value }}</td>
+                        {% endif %}
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    </div>
     {% endif %}
+
+    <div class="row">
+    <div class="col-lg-10 col-lg-offset-1">
     {% for x in doc["attributes"] %}
+    {% if (x not in sheet_basic_attr) and (x not in sheet_atom_attr) %}
         <div class="accordion-item">
-        <div class="accordion-title" onclick="$(this).next().next().slideToggle(100);">
-        <h4><i class="text-muted glyphicon glyphicon-menu-down"></i> {{ x }}</h4></div>
-        <hr class="hr-no-gap">
+        {{ accordian_header(x) }}
         <div class="accordion-text">{{ doc["attributes"][x] }}</div>
         </div>
+    {% endif %}
     {% endfor %}
     </div>
     </div>
+
 {% endif %}
 
 </div>

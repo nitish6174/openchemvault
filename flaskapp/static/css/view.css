@@ -1,0 +1,12 @@
+#sheetBasic {
+    margin-top: 50px;
+}
+
+#sheetBasic .sheet > div {
+    padding: 10px;
+}
+
+#sheetAtom {
+    margin-top: 50px;
+    padding-top: 10px;
+}

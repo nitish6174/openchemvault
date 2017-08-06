@@ -2,8 +2,7 @@
 
 body {
     font-family: 'Open Sans', sans-serif;
-    /* background-color: #f9f9f9; */
-    background-color: #f8f8ff;
+    background-color: #fcfcff;
     color: #333;
     padding-bottom: 50px;
 }
@@ -18,6 +17,11 @@ body {
 
 .right {
     float: right;
+}
+
+.sheet {
+    background-color: #fff;
+    box-shadow: 0 0 5px 0px #ccc;
 }
 
 

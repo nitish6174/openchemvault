@@ -24,7 +24,7 @@ def parse_file(file_path):
                 try:
                     val = getattr(parsed_data, x)
                     res["attributes"][x] = val
-                except:
+                except Exception as e:
                     pass
             if ob_import is True:
                 inchi = get_InChI(res["attributes"])
