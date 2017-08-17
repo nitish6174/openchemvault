@@ -115,11 +115,11 @@
 
     <div class="row">
     <div class="col-lg-10 col-lg-offset-1">
-    {% for x in doc["attributes"] %}
-    {% if (x not in sheet_basic_attr) and (x not in sheet_atom_attr) %}
+    {% for x in doc["attributes"]|dictsort %}
+    {% if (x[0] not in sheet_basic_attr) and (x[0] not in sheet_atom_attr) %}
         <div class="accordion-item">
-        {{ accordian_header(x) }}
-        <div class="accordion-text">{{ doc["attributes"][x] }}</div>
+        {{ accordian_header(x[0]) }}
+        <div class="accordion-text">{{ doc["attributes"][x[1]] }}</div>
         </div>
     {% endif %}
     {% endfor %}

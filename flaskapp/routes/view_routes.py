@@ -1,6 +1,6 @@
 import urllib.parse
 
-from flask import request, render_template, redirect
+from flask import render_template, redirect
 from bson import ObjectId
 
 from flaskapp.routes import routes_module

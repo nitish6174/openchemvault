@@ -1,32 +1,14 @@
-import os
 import json
-import simplejson
 import urllib.parse
 
-from flask import request, jsonify
+from flask import request
 from bson import ObjectId
 
 from flaskapp.routes import routes_module
-from flaskapp.process.file_handle import make_new_file_name
-from flaskapp.process.chem_process import parse_file, XYZ_data
-from flaskapp.process.json_util import jsonify_mongo, show
+from flaskapp.process.file_handle import process_uploaded_file
+from flaskapp.process.chem_process import XYZ_data
+from flaskapp.process.json_util import jsonify_mongo, api_jsonify
 import flaskapp.shared_variables as var
-
-# Directory where uploaded files will be saved temporarily
-dir_path = "flaskapp/uploads/"
-
-
-# Upload a log file and view parsed info from it
-@routes_module.route("/api/upload", methods=["POST"])
-def upload_file_api():
-    f = request.files["file"]
-    if not os.path.exists(dir_path):
-        os.mkdir(dir_path)
-    new_log_file_name = make_new_file_name()
-    f.save(new_log_file_name)
-    d = parse_file(new_log_file_name)
-    os.remove(new_log_file_name)
-    return json.dumps(d, sort_keys=True)
 
 
 # List molecules in database
@@ -162,6 +144,17 @@ def get_file_api(doc_id):
         return api_jsonify(d)
 
 
-# Handle NaN -> null conversion and return "application/json" object
-def api_jsonify(d):
-    return jsonify(json.loads(simplejson.dumps(d, ignore_nan=True)))
+# Upload a log file and view parsed info from it
+@routes_module.route("/api/upload", methods=["POST"])
+def upload_file_api():
+    f = request.files["file"]
+    d = process_uploaded_file(f)
+    return json.dumps(d, sort_keys=True)
+
+
+# Add a log file to database
+@routes_module.route("/api/addfile", methods=["POST"])
+def add_file_api():
+    f = request.files["file"]
+    d = process_uploaded_file(f)
+    return json.dumps(d, sort_keys=True)
