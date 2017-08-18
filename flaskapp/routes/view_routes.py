@@ -125,6 +125,12 @@ def upload_file_page():
     return render_template("upload.html")
 
 
+# Add a log file to database
+@routes_module.route("/addfile", methods=["GET"])
+def add_file_page():
+    return render_template("addfile.html")
+
+
 # Standalone 3Dmol viewer
 @routes_module.route("/3Dviewer", methods=["GET"])
 def viewer_page():

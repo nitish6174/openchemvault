@@ -42,7 +42,6 @@ $(document).ready(function(){
                             var result_box_text = "";
                             if(d["xyz_data"]!="")
                             {
-                                console.log(d["xyz_data"]);
                                 result_box_text += "<div class='accordion-item'>";
                                 result_box_text += "<div class='accordion-title' onclick='$(this).next().next().slideToggle(100);'>";
                                 result_box_text += "<h4><i class='text-muted glyphicon glyphicon-menu-down'></i> 3D model</h4></div>";

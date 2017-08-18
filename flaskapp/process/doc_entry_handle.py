@@ -1,41 +1,61 @@
 import os
 
-from pymongo import MongoClient
 import numpy as np
 from cclib.bridge.cclib2openbabel import makeopenbabel
 import openbabel as ob
 
-import flaskapp.config as config
 from flaskapp.process.chem_process import parse_file
-from flaskapp.shared_variables import search_attrs
-
-# Database configuration
-db_host = config.mongo_host
-db_port = config.mongo_port
-db_name = config.mongo_name
-db_user = config.mongo_user
-db_pass = config.mongo_pass
+from flaskapp.shared_variables import mongo, search_attrs
 
 
-# Process a file and add to database if parsing was successful
-def add_file_to_database(db, file_path, store_file_path=False):
+# Parse a file and continue to adding parsed data to data repository
+def add_file_to_database(db=None, file_path=None, store_file_path=False):
     print("Processing file : ", file_path, ". . . ", end="")
     res = parse_file(file_path)
     if res["success"]:
         if "formula_string" not in res:
             print("  Failed: Unable to determine molecular formula")
         else:
+            add_data_to_database(res, db, file_path, store_file_path)
             print("  Done!")
-            inserted_id = insert_data(db, res, file_path, store_file_path)
-            if inserted_id is not None:
-                generate_svg(res, inserted_id)
-                update_stats(db, res)
     else:
         print("  Failed: Unable to parse the file")
 
 
+# Add parsed data to database if parsing was successful
+def add_data_to_database(res, db=None, file_path=None, store_file_path=False):
+    if db is None:
+        db = mongo.db
+    if res["success"] is True:
+        if "formula_string" not in res:
+            return {
+                "success": False,
+                "message": "Unable to determine molecular formula"
+            }
+        else:
+            inserted_id = insert_data(res, db, file_path, store_file_path)
+            if inserted_id is not None:
+                generate_svg(res, inserted_id)
+                update_stats(res, db)
+                return {
+                    "success": True,
+                    "message": "File added to data repository",
+                    "inserted_id": inserted_id
+                }
+            else:
+                return {
+                    "success": False,
+                    "message": "Unable to insert parsed data"
+                }
+    else:
+        return {
+            "success": False,
+            "message": "Unable to parse the file"
+        }
+
+
 # Insert given parsed data in database
-def insert_data(db, data, file_path, store_file_path):
+def insert_data(data, db, file_path, store_file_path):
     formula = data["formula_string"]
     new_parsed_file_doc = {
         "attributes": data["attributes"],
@@ -99,7 +119,7 @@ def generate_svg(res, inserted_id):
 
 
 # Find min and max value for each applicable attribute
-def update_stats(db, res):
+def update_stats(res, db):
     stats_attrs = [x["key"] for x in search_attrs if x["range"] == 1]
     count = db.attr_stats.count({})
     if count == 0:

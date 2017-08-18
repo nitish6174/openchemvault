@@ -9,6 +9,7 @@ from flaskapp.process.file_handle import process_uploaded_file
 from flaskapp.process.chem_process import XYZ_data
 from flaskapp.process.json_util import jsonify_mongo, api_jsonify
 import flaskapp.shared_variables as var
+from flaskapp.process.doc_entry_handle import add_data_to_database
 
 
 # List molecules in database
@@ -157,4 +158,5 @@ def upload_file_api():
 def add_file_api():
     f = request.files["file"]
     d = process_uploaded_file(f)
-    return json.dumps(d, sort_keys=True)
+    result = add_data_to_database(d)
+    return json.dumps(result)

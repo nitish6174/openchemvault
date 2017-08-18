@@ -28,15 +28,6 @@ def get_assets():
             output='public/home.js',
             filters='jsmin'),
 
-        'upload_css': Bundle(
-            'css/upload.css',
-            output='public/upload.css',
-            filters='cssmin'),
-        'upload_js': Bundle(
-            'js/upload.js',
-            output='public/upload.js',
-            filters='jsmin'),
-
         'browse_css': Bundle(
             'css/browse.css',
             output='public/browse.css',
@@ -62,6 +53,24 @@ def get_assets():
         'search_js': Bundle(
             'js/search.js',
             output='public/search.js',
+            filters='jsmin'),
+
+        'upload_css': Bundle(
+            'css/upload.css',
+            output='public/upload.css',
+            filters='cssmin'),
+        'upload_js': Bundle(
+            'js/upload.js',
+            output='public/upload.js',
+            filters='jsmin'),
+
+        'addfile_css': Bundle(
+            'css/addfile.css',
+            output='public/addfile.css',
+            filters='cssmin'),
+        'addfile_js': Bundle(
+            'js/addfile.js',
+            output='public/addfile.js',
             filters='jsmin'),
 
         '3Dviewer_css': Bundle(
