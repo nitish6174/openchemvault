@@ -140,6 +140,17 @@
     </div>
     </div>
 
+    <div class="footer navbar-fixed-bottom" id="downloadBar">
+    <div class="row">
+        <div class="col-sm-6 text-center" id="dlParsed">
+            <a class="btn btn-primary disabled" download="{{ doc['_id'] }}-data.json"><i class="glyphicon glyphicon-save"></i> Parsed attribute data</a>
+        </div>
+        <div class="col-sm-6 text-center" id="dlXYZ">
+            <a class="btn btn-primary disabled" download="{{ doc['_id'] }}-XYZ.txt"><i class="glyphicon glyphicon-save"></i> Document's XYZ data</a>
+        </div>
+    </div>
+    </div>
+
 {% endif %}
 
 </div>
@@ -153,6 +164,7 @@
 
 <script src="http://3Dmol.csb.pitt.edu/build/3Dmol-min.js"></script>
 <script>
+    parsed_data = `{{ doc['attributes'] }}`;
     {% if "xyz_data" in doc %}
     xyz_data = `{{ doc['xyz_data'] }}`;
     {% else %}
