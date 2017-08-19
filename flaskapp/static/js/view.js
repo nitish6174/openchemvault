@@ -1,13 +1,14 @@
 $(document).ready(function(){
 
-    var parsed_data_dl = "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(parsed_data));
+    var jsonified_parsed_data = parsed_data.replace(/&#39;/g, '"').replace(/nan/g, "null");
+    var parsed_data_dl = "text/json;charset=utf-8," + jsonified_parsed_data;
     $('#dlParsed a').attr("href", "data:" + parsed_data_dl);
     $('#dlParsed a').removeClass("disabled");
 
     if(xyz_data != "")
     {
         load3Dmodel($("#molBox"), xyz_data);
-        var xyz_data_dl = "text;charset=utf-8," + encodeURIComponent(JSON.stringify(xyz_data));
+        var xyz_data_dl = "text;charset=utf-8," + encodeURIComponent(xyz_data);
         $('#dlXYZ a').attr("href", "data:" + xyz_data_dl);
         $('#dlXYZ a').removeClass("disabled");
     }
