@@ -61,13 +61,18 @@ Below instructions are given for ubuntu
   python3 setup.py build
   python3 setup.py install
   ```  
+* Set configuration  
+  ```
+  cp config.py.example config.py
+  ```  
+  Change the variable values in ```config.py``` as suitable
 * Running :  
   * Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
     (Run ```source venv_py3/bin/activate``` to enter virtual environment)
   * Run ```python run.py <SETUP_DB> <PRODUCTION> <DATA_FOLDER_PATH>``` with suitable arguments:  
-    - ```SETUP_DB``` : Set as ```1``` to seed database with parsed files else set ```0```  
-    - ```PRODUCTION``` : Setting to ```0``` runs flaskapp in ```debug``` mode  
-    - ```DATA_FOLDER_PATH``` : Path to the directory containing log files which will be parsed and inserted in host machine's MongoDB database (provided ```SETUP_DB``` is ```1```)  
+    - ```SETUP_DB``` : Set as ```1``` to seed database with files in specified folder (Default: ```0``` )
+    - ```PRODUCTION``` : Setting to ```0``` runs flaskapp in ```debug``` mode (Default: ```1``` )
+    - ```DATA_FOLDER_PATH``` : Path to the directory containing log files which will be parsed and inserted in host's MongoDB database (provided ```SETUP_DB``` is ```1```) (Default value taken from ```congfig.py```)
     **Note** : All the 3 arguments are optional
   * Then, flask server will start on the machine at port 5000.  
   * The application can now be accessed in browser at ```localhost:5000```

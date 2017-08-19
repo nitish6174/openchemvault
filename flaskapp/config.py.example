@@ -1,7 +1,7 @@
 # Used to set : app.config['SEND_FILE_MAX_AGE_DEFAULT']
 static_file_max_age = 3600 * 24 * 7
 
-# Computational chemistry log file directory
+# Computational chemistry log file directory with which to seed data repository
 data_folder = "data"
 
 # MongoDB variables
