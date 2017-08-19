@@ -44,7 +44,9 @@ def make_chemical_formula(d):
     periodic_obj = PeriodicTable()
     try:
         atom_dict = {}
+        atomsymbols = []
         for x in d["attributes"]["atomnos"]:
+            atomsymbols.append(periodic_obj.element[x])
             if x in atom_dict:
                 atom_dict[x] += 1
             else:
@@ -61,6 +63,9 @@ def make_chemical_formula(d):
             formula_str = formula_str + elem + " " + str(x["count"]) + " "
         d["formula"] = formula_dict
         d["formula_string"] = formula_str[:-1]
+        d["attributes"]["atomsymbols"] = atomsymbols
+        massnos = [round(x) for x in d["attributes"]["atommasses"]]
+        d["attributes"]["massnos"] = massnos
     except:
         pass
 

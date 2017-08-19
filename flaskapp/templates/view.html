@@ -11,10 +11,12 @@
 
 
 
+{# List of attributes not to be displayed #}
+{% set no_display_attr = ["atomnos", "atomsymbols"] %}
 {# List of attributes to be shown in basic details sheet #}
 {% set sheet_basic_attr = ["natom", "metadata"] %}
 {# List of attributes to be shown in atom-wise details sheet #}
-{% set sheet_atom_attr = ["atomnos", "atommasses", "atomcoords", "coreelectrons"] %}
+{% set sheet_atom_attr = ["atommasses", "atomcoords", "coreelectrons"] %}
 {# Depth of various parsed attributes #}
 {% set attr_depth = {"atomnos": 1, "atommasses": 1, "atomcoords": 2, "coreelectrons": 1} %}
 
@@ -79,17 +81,28 @@
             {{ accordian_header("Atom-wise attributes") }}
             <div class="accordion-text">
                 <table class="table table-striped">
+                    <thead>
                     <tr>
                         <th>S. No.</th>
+                        <th>Atom</th>
                         {% for x in sheet_atom_attr %}
                         {% if x in doc["attributes"] %}
                             <th>{{ x }}</th>
                         {% endif %}
                         {% endfor %}
                     </tr>
+                    </thead>
+                    <tbody>
                     {% for i in range(doc["attributes"]["natom"]) %}
                     <tr>
                         <td>{{ i+1 }}</td>
+                        <td>
+                            <sub>{{ doc["attributes"]["atomnos"][i] }}</sub>
+                            {{ doc["attributes"]["atomsymbols"][i] }}
+                            {% if "massnos" in doc["attributes"] %}
+                            <sup>{{ doc["attributes"]["massnos"][i] }}</sup>
+                            {% endif %}
+                        </td>
                         {% for x in sheet_atom_attr %}
                         {% if x in doc["attributes"] %}
                             {% if attr_depth[x] == 1 %}
@@ -104,6 +117,7 @@
                         {% endfor %}
                     </tr>
                     {% endfor %}
+                    </tbody>
                 </table>
             </div>
             </div>
@@ -116,10 +130,10 @@
     <div class="row">
     <div class="col-lg-10 col-lg-offset-1">
     {% for x in doc["attributes"]|dictsort %}
-    {% if (x[0] not in sheet_basic_attr) and (x[0] not in sheet_atom_attr) %}
+    {% if (x[0] not in sheet_basic_attr) and (x[0] not in sheet_atom_attr) and (x[0] not in no_display_attr) %}
         <div class="accordion-item">
         {{ accordian_header(x[0]) }}
-        <div class="accordion-text">{{ doc["attributes"][x[1]] }}</div>
+        <div class="accordion-text">{{ x[1] }}</div>
         </div>
     {% endif %}
     {% endfor %}
