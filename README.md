@@ -1,6 +1,6 @@
-# cclib web repository
+# OpenChemVault
 
-Web platform to parse data from chemistry logfiles using [cclib](https://github.com/cclib/cclib)
+This project is a framework which can be used to setup a data repository of computational chemistry format log files and deploy a (public) server providing REST API and web interface to browse and view the documents in the repository, search/filter using parsed attributes available, add new files to the database, download a document’s data and instantly parse a log file with [cclib](https://github.com/cclib/cclib) just by uploading the file in browser.
 
 
 ## Setup
@@ -10,7 +10,7 @@ Web platform to parse data from chemistry logfiles using [cclib](https://github.
 * Install Docker and docker-compose on your machine  
 * Clone this repository  
   ```bash
-  git clone https://github.com/nitish6174/cclib-web
+  git clone https://github.com/nitish6174/openchemvault
   ```
 * Setup the docker environment file
   ```bash
@@ -45,11 +45,11 @@ Below instructions are given for ubuntu
   ```  
 * Clone repository and setup virtualenv for project  
   ```bash
-  git clone https://github.com/nitish6174/cclib-web.git
-  cd cclib-web
+  git clone https://github.com/nitish6174/openchemvault.git
+  cd openchemvault
   virtualenv -p python3 venv_py3
   ```  
-* Download [cclib](https://github.com/cclib/cclib) repository inside the ```cclib-web``` folder:  
+* Download [cclib](https://github.com/cclib/cclib) repository inside the ```openchemvault``` folder:  
   ```bash
   git clone https://github.com/cclib/cclib.git
   ```  
@@ -67,7 +67,7 @@ Below instructions are given for ubuntu
   ```  
   Change the variable values in ```config.py``` as suitable
 * Running :  
-  * Go to ```cclib-web``` directory (root of repo) and make sure virtualenv is activated.  
+  * Go to ```openchemvault``` directory (root of repo) and make sure virtualenv is activated.  
     (Run ```source venv_py3/bin/activate``` to enter virtual environment)
   * Run ```python run.py <SETUP_DB> <PRODUCTION> <DATA_FOLDER_PATH>``` with suitable arguments:  
     - ```SETUP_DB``` : Set as ```1``` to seed database with files in specified folder (Default: ```0``` )
@@ -89,7 +89,7 @@ This project is a framework having 3 modules :
 
 ## Available functionality
 
-Details can be found in the [TODO list](https://github.com/nitish6174/cclib-web/issues/1)
+Details can be found in the [TODO list](https://github.com/nitish6174/openchemvault/issues/1)
 
 Here are the features available in web front-end as of now:
 
