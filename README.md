@@ -7,7 +7,7 @@ This project is a framework which can be used to setup a data repository of comp
 
 ### With Docker
 
-* Install Docker and docker-compose on your machine  
+* Install ```docker``` and ```docker-compose``` on your machine  
 * Clone this repository  
   ```bash
   git clone https://github.com/nitish6174/openchemvault
@@ -16,9 +16,9 @@ This project is a framework which can be used to setup a data repository of comp
   ```bash
   cp .env.example .env
   ```
-  Set ```SETUP_DB``` as ```1``` to seed database with parsed files else set ```0```  
-  ```DATA_FOLDER_PATH``` is the local path to the directory of log files which will be parsed and inserted in dockerized image's database if ```SETUP_DB``` is ```1```  
-  Setting ```PRODUCTION``` to ```0``` runs flaskapp in ```debug``` mode
+  * Set ```SETUP_DB``` as ```1``` to seed database with parsed files else set ```0```
+  * ```DATA_FOLDER_PATH``` is the local path to the directory of log files which will be parsed and inserted in dockerized image's database if ```SETUP_DB``` is ```1```
+  * Setting ```PRODUCTION``` to ```0``` runs flaskapp in ```debug``` mode
 * Build the Docker setup and run it 
   ```bash
   sudo docker-compose build
@@ -72,7 +72,8 @@ Below instructions are given for ubuntu
   * Run ```python run.py <SETUP_DB> <PRODUCTION> <DATA_FOLDER_PATH>``` with suitable arguments:  
     - ```SETUP_DB``` : Set as ```1``` to seed database with files in specified folder (Default: ```0``` )
     - ```PRODUCTION``` : Setting to ```0``` runs flaskapp in ```debug``` mode (Default: ```1``` )
-    - ```DATA_FOLDER_PATH``` : Path to the directory containing log files which will be parsed and inserted in host's MongoDB database (provided ```SETUP_DB``` is ```1```) (Default value taken from ```congfig.py```)
+    - ```DATA_FOLDER_PATH``` : Path to the directory containing log files which will be parsed and inserted in host's MongoDB database (provided ```SETUP_DB``` is ```1```) (Default value taken from ```config.py```)
+
     **Note** : All the 3 arguments are optional
   * Then, flask server will start on the machine at port 5000.  
   * The application can now be accessed in browser at ```localhost:5000```
